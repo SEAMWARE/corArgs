@@ -11,7 +11,7 @@
 #include <stdio.h>                     // NULL
 #include <stdlib.h>                    // calloc
 
-#include "kbase/kBasicLog.h"           // KBL_*
+#include "corBase/corLibLog.h"         // COR_LIB_*
 
 #include "corArgs/CorArgsStatus.h"     // CorArgsStatus
 #include "corArgs/CorArgsError.h"      // Own interface
@@ -46,7 +46,7 @@ void corArgsErrorPush
   CorArgsError* eP = (CorArgsError*) calloc(1, sizeof(CorArgsError));
 
   if (eP == NULL)  // Out of memory ...
-    KBL_RV(("Out Of Memory"));
+    COR_LIB_RVE("Out Of Memory");
 
   eP->fileName     = (char*) fileName;
   eP->lineNo       = lineNo;
@@ -72,8 +72,7 @@ void corArgsErrorPush
     errorListHead = eP;
   }
 
-  if (kbVerbose == true)
-    printf("%c:%s[%d]: %s: %s\n", 'E', eP->fileName, eP->lineNo, eP->funcName, eP->description);
+  COR_LIB_V("%s[%d]: %s: %s", eP->fileName, eP->lineNo, eP->funcName, eP->description);
 }
 
 

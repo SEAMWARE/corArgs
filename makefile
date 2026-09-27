@@ -18,7 +18,7 @@ LIB_SO        = libcorArgs.so
 LIB           = libcorArgs.a
 CC            = gcc
 INCLUDE       = -I..
-DFLAGS        = -DKBLOG_ON
+DFLAGS        =
 #
 # EXTRA_CFLAGS - the hook for a caller that needs to ADD flags to this build.
 # Not DFLAGS: `make DFLAGS=...` REPLACES it, and a `DFLAGS +=` here would be
@@ -49,7 +49,7 @@ DEPS          = $(OBJECTS:.o=.d) $(OBJDIR)/corArgsTest.d
 # It stays in obj/: it is not a tool, and nothing installs it.
 #
 TEST          = $(OBJDIR)/corArgsTest
-TEST_LIBS     = ../kbase/libkbase.a
+TEST_LIBS     = ../corBase/libcorBase.a
 
 all: $(LIB) $(LIB_SO) $(TEST)
 

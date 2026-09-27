@@ -13,6 +13,7 @@
 //
 #include <errno.h>                      // errno
 
+#include "corBase/corLibLog.h"         // COR_LIB_E
 #include "corArgs/CorArgsStatus.h"      // CorArgsStatus
 
 
@@ -24,7 +25,7 @@
 #define CORARGS_ERROR_PUSH(optionName, status, description)                                       \
 do                                                                                              \
 {                                                                                               \
-  KBL_E(("CorArgs Error %s for option '%s': %s", corArgsStatus(status), optionName, description));  \
+  COR_LIB_E("CorArgs Error %s for option '%s': %s", corArgsStatus(status), optionName, description);  \
   corArgsErrorPush(__FILE__, __LINE__, __FUNCTION__, optionName, errno, status, description);     \
 } while (0)
 
