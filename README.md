@@ -6,7 +6,7 @@ A type-safe command-line argument parsing library for C with support for multipl
 - **Language:** C
 - **License:** [Apache License 2.0](LICENSE)
 
-The only dependency is **kbase**.
+The only dependency is **corBase**.
 
 ## Where it comes from
 
@@ -240,7 +240,7 @@ if (status != CorArgsOk) {
 
 ## Dependencies
 
-- [kbase](../kbase) - the log macros (KBL_*), K_VEC_SIZE, kStringSort
+- [corBase](../corBase) - the library log (COR_LIB_*), COR_VEC_SIZE, corStringSort
 
 ## License
 

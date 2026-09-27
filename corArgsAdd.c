@@ -11,7 +11,6 @@
 #include <stdlib.h>                    // realloc
 #include <stdbool.h>                   // bool
 
-#include "kbase/kBasicLog.h"           // KBL_E
 
 #include "corArgs/CorArgsStatus.h"     // CorArgsStatus
 #include "corArgs/CorArgsError.h"      // CORARGS_ERROR_PUSH

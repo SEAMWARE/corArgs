@@ -8,8 +8,8 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 //
-#include "kbase/kBasicLog.h"           // KBL_*
 
+#include <string.h>                    // strcmp
 #include "corArgs/CorArg.h"            // CorArg
 #include "corArgs/CorArgsError.h"      // CORARGS_ERROR_PUSH
 #include "corArgs/corArgsBuiltins.h"   // corArgsBuiltins

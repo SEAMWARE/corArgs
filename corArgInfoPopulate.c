@@ -11,7 +11,7 @@
 #include <string.h>                    // memset, strcmp, strlen, sprintf
 #include <stdbool.h>                   // bool
 
-#include "kbase/kBasicLog.h"           // KBL_*
+#include "corBase/corLibLog.h"         // COR_LIB_*
 
 #include "corArgs/CorArgInfo.h"        // CorArgInfo
 #include "corArgs/corArgsConfig.h"     // corArgsPrefix
@@ -125,7 +125,7 @@ void corArgInfoPopulate(CorArgInfo* corArgInfoV, CorArg* kargV, bool builtin, in
     }
 
     corArgInfoV[kiIx].envVar[prefixLen + onIx] = 0;
-    KBL_V(("Env var for '%s': %s", corArgInfoV[kiIx].longName, corArgInfoV[kiIx].envVar));
+    COR_LIB_V("Env var for '%s': %s", corArgInfoV[kiIx].longName, corArgInfoV[kiIx].envVar);
 
     ++ix;
     ++kiIx;

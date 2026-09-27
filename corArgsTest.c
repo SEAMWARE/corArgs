@@ -9,10 +9,13 @@
 // SPDX-License-Identifier: Apache-2.0
 //
 #include <stdio.h>                     // printf, NULL
+#include <stdarg.h>                    // va_list
 #include <stdbool.h>                   // bool
+#include <string.h>                    // strcmp
 
-#include "kbase/kMacros.h"             // K_FT
-#include "kbase/kBasicLog.h"           // kbVerbose
+#include "corBase/corMacros.h"         // COR_FT
+#include "corBase/corLibLog.h"         // COR_LIB_*
+#include "corBase/corBaseInit.h"       // corBaseInit
 
 #include "corArgs/corArgs.h"           // corArgs library
 
@@ -964,6 +967,39 @@ CorArg corArgsShortLongNameIsTheSame[] =
 //
 // main - 
 //
+// -----------------------------------------------------------------------------
+//
+// testLog - this program's log: stdout, as the old KBL_* printfs were
+//
+// Errors, warnings and exits always; verbose lines with -v. Under --ktest the line
+// number is always 0 - line numbers change and would break every expected output.
+//
+static bool verbose       = false;
+static bool noLineNumbers = false;
+
+static void testLog(const char* fileName, int lineNo, const char* functionName, char type, int aux, const char* format, ...)
+{
+  va_list ap;
+
+  (void) aux;
+
+  if ((type != 'E') && (type != 'W') && (type != 'X') && ((type != 'V') || (verbose == false)))
+    return;
+
+  printf("%c:%s[%d]: %s: ", type, fileName, (noLineNumbers == true)? 0 : lineNo, functionName);
+  va_start(ap, format);
+  vprintf(format, ap);
+  va_end(ap);
+  printf("\n");
+  fflush(stdout);
+}
+
+
+
+// -----------------------------------------------------------------------------
+//
+// corArgsErrorPresent -
+//
 static void corArgsErrorPresent(void)
 {
   CorArgsError* eP = corArgsErrorGet();
@@ -971,7 +1007,7 @@ static void corArgsErrorPresent(void)
 
   while (eP != NULL)
   {
-    if (kbVerbose)
+    if (verbose)
       printf("%s[%d]:%s: %s: %s\n", eP->fileName, eP->lineNo, eP->funcName, eP->optionName, eP->description);
     else
       printf("Error %d: %s: %s\n", eNo, eP->optionName, eP->description);
@@ -993,11 +1029,13 @@ int main(int argC, char* argV[])
   char*        peekValue;
   
   if (corArgsPeek(argC, argV, kargs, "--ktest") != NULL)
-    kbNoLineNumbers = true;
+    noLineNumbers = true;
 
   if (corArgsPeek(argC, argV, kargs, "-v") != NULL)
-    kbVerbose = true;
-  KBL_V(("Calling corArgsPeek"));
+    verbose = true;
+
+  corBaseInit(testLog);
+  COR_LIB_V("Calling corArgsPeek");
 
   if (corArgsPeek(argC, argV, kargs, "--peek") != NULL)
   {
@@ -1005,7 +1043,7 @@ int main(int argC, char* argV[])
     return 0;
   }
   
-  KBL_V(("Calling corArgsPeek again"));
+  COR_LIB_V("Calling corArgsPeek again");
 
   if ((peekValue = corArgsPeek(argC, argV, kargs, "--speek")) != NULL)
   {
@@ -1023,7 +1061,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1038,7 +1076,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1053,7 +1091,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1068,7 +1106,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1083,7 +1121,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1098,7 +1136,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1113,7 +1151,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1128,7 +1166,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1143,7 +1181,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1158,7 +1196,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1173,7 +1211,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1188,7 +1226,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1203,7 +1241,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1218,7 +1256,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1233,7 +1271,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1248,7 +1286,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1263,7 +1301,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1278,7 +1316,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1293,7 +1331,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1308,7 +1346,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1323,7 +1361,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1338,7 +1376,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1353,7 +1391,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1368,7 +1406,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1385,7 +1423,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1400,7 +1438,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1415,7 +1453,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1430,7 +1468,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1445,7 +1483,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1460,7 +1498,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1475,7 +1513,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1490,7 +1528,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1505,7 +1543,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1520,7 +1558,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1535,7 +1573,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1550,7 +1588,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1565,7 +1603,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1580,7 +1618,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1595,7 +1633,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1610,7 +1648,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1625,7 +1663,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1640,7 +1678,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1655,7 +1693,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1670,7 +1708,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1685,7 +1723,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1700,7 +1738,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1715,7 +1753,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1730,7 +1768,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1745,7 +1783,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1760,7 +1798,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1775,7 +1813,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1790,7 +1828,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1805,7 +1843,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1820,7 +1858,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1835,7 +1873,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1850,7 +1888,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1865,7 +1903,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1880,7 +1918,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1895,7 +1933,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
       
       printf("OK: %s error correctly detected\n", caseName);
@@ -1910,7 +1948,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
 
       printf("OK: %s error correctly detected\n", caseName);
@@ -1925,7 +1963,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
 
       printf("OK: %s error correctly detected\n", caseName);
@@ -1940,7 +1978,7 @@ int main(int argC, char* argV[])
       if (ks == CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit did not detect %s", caseName));
+        COR_LIB_X(1, "corArgsInit did not detect %s", caseName);
       }
 
       printf("OK: %s error correctly detected\n", caseName);
@@ -1955,7 +1993,7 @@ int main(int argC, char* argV[])
       if (ks != CorArgsOk)
       {
         corArgsErrorPresent();
-        KBL_X(1, ("corArgsInit incorrectly flagged error for %s", caseName));
+        COR_LIB_X(1, "corArgsInit incorrectly flagged error for %s", caseName);
       }
       
       printf("OK: no error for %s\n", caseName);
@@ -1964,20 +2002,20 @@ int main(int argC, char* argV[])
     }
   }
 
-  KBL_V(("Calling corArgsInit"));
+  COR_LIB_V("Calling corArgsInit");
   ks = corArgsInit("corArgsTest", kargs, "CORARGSTEST");
   if (ks != CorArgsOk)
   {
     corArgsErrorPresent();
-    KBL_X(1, ("error initializing corArgs library (error %d)", ks));
+    COR_LIB_X(1, "error initializing corArgs library (error %d)", ks);
   }
 
-  KBL_V(("Calling corArgsConfig"));
+  COR_LIB_V("Calling corArgsConfig");
   corArgsConfig(CorArgsPrefix, "KAT_");
 
-  KBL_V(("Calling corArgsParse"));
+  COR_LIB_V("Calling corArgsParse");
   ks = corArgsParse(argC, argV);
-  KBL_V(("Back from corArgsParse"));
+  COR_LIB_V("Back from corArgsParse");
 
   if (ks != CorArgsOk)
   {
@@ -2032,9 +2070,9 @@ int main(int argC, char* argV[])
   printf("strMax:    %s\n", strMax);
   printf("strMinMax: %s\n", strMinMax);
 
-  printf("b1:        %s\n", K_FT(b1));
-  printf("b2:        %s\n", K_FT(b2));
-  printf("b3:        %s\n", K_FT(b3));
+  printf("b1:        %s\n", COR_FT(b1));
+  printf("b2:        %s\n", COR_FT(b2));
+  printf("b3:        %s\n", COR_FT(b3));
 
   return 0;
 }

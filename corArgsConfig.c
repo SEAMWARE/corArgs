@@ -12,7 +12,6 @@
 #include <stdlib.h>                    // atoi
 #include <stdbool.h>                   // bool
 
-#include "kbase/kBasicLog.h"           // KBL_*
 
 #include "corArgs/CorArgsStatus.h"     // CorArgsStatus
 #include "corArgs/CorArgsError.h"      // CORARGS_ERROR_PUSH

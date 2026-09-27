@@ -12,7 +12,7 @@
 #include <string.h>                    // strdup
 #include <stdbool.h>                   // bool
 
-#include "kbase/kBasicLog.h"           // KBL_*
+#include "corBase/corLibLog.h"         // COR_LIB_*
 
 #include "corArgs/CorArgInfo.h"        // CorArgInfo
 #include "corArgs/corArgsGlobals.h"    // corArgsProgName, etc
@@ -31,7 +31,7 @@ void corArgsUsage(void)
   char spaces[128];
   int  len = 7 + strlen(corArgsProgName) + 2;
 
-  KBL_V(("In"));
+  COR_LIB_V("In");
 
   // Protect against ridiculously long program names
   if (len >= (int) sizeof(spaces))
@@ -271,7 +271,7 @@ void corArgsExtUsage(void)
   char spaces[128];
   int  len = 7 + strlen(corArgsProgName) + 2;
 
-  KBL_V(("In"));
+  COR_LIB_V("In");
 
   // Protect against ridiculously long program names
   if (len >= (int) sizeof(spaces))

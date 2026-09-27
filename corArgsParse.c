@@ -37,11 +37,12 @@
 #include <stdio.h>                     // printf
 #include <stdlib.h>                    // exit, strtoll
 #include <errno.h>                     // errno
+#include <string.h>                    // strcmp, strdup
 #include <limits.h>                    // min/max values for integer types
 #include <stdbool.h>                   // bool
 
-#include "kbase/kBasicLog.h"           // KBL_*
-#include "kbase/kStringSort.h"         // kStringSort
+#include "corBase/corLibLog.h"         // COR_LIB_*
+#include "corBase/corStringSort.h"     // corStringSort
 
 #include "corArgs/corArgsGlobals.h"    // corArgsProgName, etc
 #include "corArgs/CorArgsStatus.h"     // CorArgsStatus
@@ -381,7 +382,7 @@ static CorArgsStatus optionSet(CorArgInfo* kargP, int argC, char* argV[], int ar
   char*               stringValue = NULL;
   CorArgsStatus       ks;
 
-  KBL_V(("Setting option '%s', argIx: %d, argC: %d", kargP->longName, argIx, argC));
+  COR_LIB_V("Setting option '%s', argIx: %d, argC: %d", kargP->longName, argIx, argC);
 
   if ((kargP->type != CorArgBool) && (argIx + 1 >= argC))
   {
@@ -452,7 +453,7 @@ static CorArgsStatus optionSet(CorArgInfo* kargP, int argC, char* argV[], int ar
     intValue  = strtoll(valueP,  &rest, base);
     uintValue = strtoull(valueP, &rest, base);
 
-    // KBL_M(("valueP: '%s', base: %d, intValue: %d", valueP, base, intValue));
+    // COR_LIB_I("valueP: '%s', base: %d, intValue: %d", valueP, base, intValue);
 
     if (errno == ERANGE)
     {
@@ -567,7 +568,7 @@ CorArgsStatus corArgsParse(int argC, char* argV[])
 
       if (found == true)
       {
-        KBL_V(("Found option '%s': %s", optName, corArgInfoV[kargIx].description));
+        COR_LIB_V("Found option '%s': %s", optName, corArgInfoV[kargIx].description);
         if ((ks = optionSet(&corArgInfoV[kargIx], argC, argV, argIx)) != 0)
         {
           CORARGS_ERROR_PUSH(optName, ks, corArgsStatus(ks));
@@ -594,7 +595,7 @@ CorArgsStatus corArgsParse(int argC, char* argV[])
       char*  toFree       = charsSorted;
       bool   allOk        = true;
 
-      kStringSort(charsSorted);
+      corStringSort(charsSorted);
 
       while (*charsSorted != 0)
       {

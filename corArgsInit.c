@@ -10,9 +10,10 @@
 //
 #include <stdlib.h>                    // calloc
 #include <stdbool.h>                   // bool
+#include <string.h>                    // strcmp
 
-#include "kbase/kBasicLog.h"           // KBL_V
-#include "kbase/kMacros.h"             // K_VEC_SIZE
+#include "corBase/corLibLog.h"         // COR_LIB_*
+#include "corBase/corMacros.h"         // COR_VEC_SIZE
 
 #include "corArgs/CorArgsStatus.h"     // CorArgsStatus
 #include "corArgs/CorArgsError.h"      // CORARGS_ERROR_PUSH
@@ -107,9 +108,9 @@ static bool outOfBound
     break;
 
   case CorArgInt:
-    KBL_V(("sVal:    %lld", sVal));
-    KBL_V(("INT_MIN: %d", INT_MIN));
-    KBL_V(("INT_MAX: %d", INT_MAX));
+    COR_LIB_V("sVal:    %lld", sVal);
+    COR_LIB_V("INT_MIN: %d", INT_MIN);
+    COR_LIB_V("INT_MAX: %d", INT_MAX);
 
     if (sVal < INT_MIN)
     {
@@ -195,12 +196,12 @@ static CorArgsStatus corArgVectorCheck(CorArg* kiV)
 {
   int kiIx = 0;
 
-  KBL_V(("In corArgVectorCheck"));
+  COR_LIB_V("In corArgVectorCheck");
   
   //
   // 1. Any user option with neither longName nor shortName?
   //
-  KBL_V(("corArgVectorCheck: Any user option with neither longName nor shortName?"));
+  COR_LIB_V("corArgVectorCheck: Any user option with neither longName nor shortName?");
   while (kiV[kiIx].type != CorArgEnd)
   {
     if ((kiV[kiIx].longName == NULL) || (kiV[kiIx].longName[0] == 0))
@@ -219,7 +220,7 @@ static CorArgsStatus corArgVectorCheck(CorArg* kiV)
   //
   // 2. Any user option with the same longName/shortName as a builtin?
   //
-  KBL_V(("corArgVectorCheck: Any user option with the same longName/shortName as a builtin?"));
+  COR_LIB_V("corArgVectorCheck: Any user option with the same longName/shortName as a builtin?");
   kiIx = 0;
   while (kiV[kiIx].type != CorArgEnd)
   {
@@ -267,7 +268,7 @@ static CorArgsStatus corArgVectorCheck(CorArg* kiV)
   //
   // 3. Any user option with the same longName/shortName as some other user option?
   //
-  KBL_V(("corArgVectorCheck: Any user option with the same longName/shortName some other user option?"));
+  COR_LIB_V("corArgVectorCheck: Any user option with the same longName/shortName some other user option?");
   int ix1 = 0;
   while (kiV[ix1].type != CorArgEnd)
   {
@@ -283,10 +284,10 @@ static CorArgsStatus corArgVectorCheck(CorArg* kiV)
       
       if (kiV[ix1].longName != NULL)
       {
-        KBL_V(("Testing longName '%s'", kiV[ix1].longName));
+        COR_LIB_V("Testing longName '%s'", kiV[ix1].longName);
         if (kiV[ix2].longName != NULL)
         {
-          KBL_V(("Checking against longName '%s'", kiV[ix2].longName));
+          COR_LIB_V("Checking against longName '%s'", kiV[ix2].longName);
           if (strcmp(kiV[ix1].longName, kiV[ix2].longName) == 0)
           {
             CORARGS_ERROR_PUSH(kiV[kiIx].longName, CorArgsNameTaken, "Option long-name already in use (by other options long-name)");
@@ -296,7 +297,7 @@ static CorArgsStatus corArgVectorCheck(CorArg* kiV)
 
         if (kiV[ix2].shortName != NULL)
         {
-          KBL_V(("Checking against shortName '%s'", kiV[ix2].shortName));
+          COR_LIB_V("Checking against shortName '%s'", kiV[ix2].shortName);
           if (strcmp(kiV[ix1].longName, kiV[ix2].shortName) == 0)
           {
             CORARGS_ERROR_PUSH(kiV[kiIx].longName, CorArgsNameTaken, "Option long-name already in use (by other options short-name)");
@@ -307,10 +308,10 @@ static CorArgsStatus corArgVectorCheck(CorArg* kiV)
 
       if (kiV[ix1].shortName != NULL)
       {
-        KBL_V(("Testing shortName '%s'", kiV[ix1].shortName));
+        COR_LIB_V("Testing shortName '%s'", kiV[ix1].shortName);
         if (kiV[ix2].longName != NULL)
         {
-          KBL_V(("Checking against longName '%s'", kiV[ix2].longName));
+          COR_LIB_V("Checking against longName '%s'", kiV[ix2].longName);
           if (strcmp(kiV[ix1].shortName, kiV[ix2].longName) == 0)
           {
             CORARGS_ERROR_PUSH(kiV[kiIx].shortName, CorArgsNameTaken, "Option short-name already in use (by other options short-name)");
@@ -320,7 +321,7 @@ static CorArgsStatus corArgVectorCheck(CorArg* kiV)
 
         if (kiV[ix2].shortName != NULL)
         {
-          KBL_V(("Checking against shortName '%s'", kiV[ix2].shortName));
+          COR_LIB_V("Checking against shortName '%s'", kiV[ix2].shortName);
           if (strcmp(kiV[ix1].shortName, kiV[ix2].shortName) == 0)
           {
             CORARGS_ERROR_PUSH(kiV[kiIx].shortName, CorArgsNameTaken, "Option short-name already in use (by other options short-name)");
@@ -340,7 +341,7 @@ static CorArgsStatus corArgVectorCheck(CorArg* kiV)
   // 4. Default value and range limits within min/max for its type?
   //    E.g. a max-value of 256 for a CorArgUChar is an error as an 8-bit value is 0-255
   //
-  KBL_V(("corArgVectorCheck: Default+Range-Limits within min/max for type?"));
+  COR_LIB_V("corArgVectorCheck: Default+Range-Limits within min/max for type?");
   int ix = 0;
   while (kiV[ix].type != CorArgEnd)
   {
@@ -356,10 +357,10 @@ static CorArgsStatus corArgVectorCheck(CorArg* kiV)
     // Min limit out of bounds?
     if (sMin != CORARGS_NL_NUMBER)
     {
-      KBL_V(("sMin:      %lld (0x%llx)", sMin, sMin));
-      KBL_V(("LONG_MIN:  %lld (0x%llx)", LONG_MIN, LONG_MIN));
-      KBL_V(("uMin:      %llu (0x%llx)", uMin, uMin));
-      KBL_V(("ULONG_MIN: %llu (0x%llx)", ULONG_MIN, ULONG_MIN));
+      COR_LIB_V("sMin:      %lld (0x%llx)", sMin, sMin);
+      COR_LIB_V("LONG_MIN:  %lld (0x%llx)", LONG_MIN, LONG_MIN);
+      COR_LIB_V("uMin:      %llu (0x%llx)", uMin, uMin);
+      COR_LIB_V("ULONG_MIN: %llu (0x%llx)", ULONG_MIN, ULONG_MIN);
       if (outOfBound(kiV[ix].type, sMin, uMin, &errorString) == true)
       {
         CORARGS_ERROR_PUSH(name, CorArgsBadParam, errorString);
@@ -394,7 +395,7 @@ static CorArgsStatus corArgVectorCheck(CorArg* kiV)
   //
   // 5. Default value within its range?
   //
-  KBL_V(("corArgVectorCheck: Default value within its range?"));
+  COR_LIB_V("corArgVectorCheck: Default value within its range?");
   while (kiV[ix].type != CorArgEnd)
   {
     char*               name   = (kiV[ix].longName == NULL)? (char*) kiV[ix].shortName : (char*) kiV[ix].longName;
@@ -457,7 +458,7 @@ static CorArgsStatus corArgVectorCheck(CorArg* kiV)
   //    Def <= Max Limit?
   //    Def >= Min Limit?
   //
-  KBL_V(("corArgVectorCheck: Min > Max?"));
+  COR_LIB_V("corArgVectorCheck: Min > Max?");
   ix = 0;
   while (kiV[ix].type != CorArgEnd)
   {
@@ -537,7 +538,7 @@ static CorArgsStatus corArgVectorCheck(CorArg* kiV)
   //
   // 7. Invalid CorArgType (compiler should warn - typecasts get thru that)
   //
-  KBL_V(("corArgVectorCheck: Invalid CorArgType?"));
+  COR_LIB_V("corArgVectorCheck: Invalid CorArgType?");
   ix = 0;
   while (kiV[ix].type != CorArgEnd)
   {
@@ -556,7 +557,7 @@ static CorArgsStatus corArgVectorCheck(CorArg* kiV)
   //
   // 8. NULL valueP
   //
-  KBL_V(("corArgVectorCheck: NULL valueP?"));
+  COR_LIB_V("corArgVectorCheck: NULL valueP?");
   ix = 0;
   while (kiV[ix].type != CorArgEnd)
   {
@@ -575,7 +576,7 @@ static CorArgsStatus corArgVectorCheck(CorArg* kiV)
   //
   // 9. Invalid CorArgSort (compiler should warn - typecasts get thru that)
   //
-  KBL_V(("corArgVectorCheck: Invalid CorArgSort?"));
+  COR_LIB_V("corArgVectorCheck: Invalid CorArgSort?");
   ix = 0;
   while (kiV[ix].type != CorArgEnd)
   {
@@ -594,7 +595,7 @@ static CorArgsStatus corArgVectorCheck(CorArg* kiV)
   //
   // 10. NULL description
   //
-  KBL_V(("corArgVectorCheck: NULL description?"));
+  COR_LIB_V("corArgVectorCheck: NULL description?");
   ix = 0;
   while (kiV[ix].type != CorArgEnd)
   {
@@ -760,7 +761,7 @@ CorArgsStatus corArgsInit(const char* progName, CorArg* kargV, const char* prefi
   //   o the default values are in between limits,
   //   o what more?
   //
-  KBL_V(("Calling corArgVectorCheck"));
+  COR_LIB_V("Calling corArgVectorCheck");
   ks = corArgVectorCheck(kargV);
   if (ks != CorArgsOk)
   {
@@ -778,15 +779,15 @@ CorArgsStatus corArgsInit(const char* progName, CorArg* kargV, const char* prefi
 
   while (corArgsBuiltins[builtins].type != CorArgEnd)
     ++builtins;
-  KBL_V(("%d builtins", builtins));
+  COR_LIB_V("%d builtins", builtins);
 
   while (kargV[userOptions].type != CorArgEnd)
     ++userOptions;
-  KBL_V(("%d user defined options", userOptions));
+  COR_LIB_V("%d user defined options", userOptions);
 
   options = builtins + userOptions + 1;
 
-  KBL_V(("Allocating room for %d options", options));
+  COR_LIB_V("Allocating room for %d options", options);
   corArgInfoV = (CorArgInfo*) calloc(options, sizeof(CorArgInfo));
 
   if (corArgInfoV == NULL)
@@ -797,8 +798,8 @@ CorArgsStatus corArgsInit(const char* progName, CorArg* kargV, const char* prefi
   
   int ix = 0;
 
-  KBL_V(("Calling corArgInfoPopulate for builtins"));
-  KBL_V(("Calling corArgInfoPopulate for user defined options"));
+  COR_LIB_V("Calling corArgInfoPopulate for builtins");
+  COR_LIB_V("Calling corArgInfoPopulate for user defined options");
   corArgInfoPopulate(corArgInfoV, corArgsBuiltins, true,   &ix);
   corArgInfoPopulate(corArgInfoV, kargV,     false, &ix);
 
