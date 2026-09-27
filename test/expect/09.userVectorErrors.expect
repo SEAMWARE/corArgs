@@ -1,0 +1,432 @@
+01. MinCharOutOfBounds
+================================================================================
+OK: MinCharOutOfBounds error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --MinCharOutOfBounds: lower than minimum value for type
+
+
+02. MinUCharOutOfBounds
+================================================================================
+OK: MinUCharOutOfBounds error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --MinUCharOutOfBounds: lower than minimum value for type
+
+
+03. MinShortOutOfBounds
+================================================================================
+OK: MinShortOutOfBounds error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --MinShortOutOfBounds: lower than minimum value for type
+
+
+04. MinUShortOutOfBounds
+================================================================================
+OK: MinUShortOutOfBounds error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --MinUShortOutOfBounds: lower than minimum value for type
+
+
+05. MinIntOutOfBounds
+================================================================================
+OK: MinIntOutOfBounds error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --MinIntOutOfBounds: lower than minimum value for type
+
+
+06. MinUIntOutOfBounds
+================================================================================
+OK: MinUIntOutOfBounds error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --MinUIntOutOfBounds: lower than minimum value for type
+
+
+07. MaxCharOutOfBounds
+================================================================================
+OK: MaxCharOutOfBounds error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --MaxCharOutOfBounds: higher than maximum value for type
+
+
+08. MaxUCharOutOfBounds
+================================================================================
+OK: MaxUCharOutOfBounds error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --MaxUCharOutOfBounds: higher than maximum value for type
+
+
+09. MaxShortOutOfBounds
+================================================================================
+OK: MaxShortOutOfBounds error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --MaxShortOutOfBounds: higher than maximum value for type
+
+
+10. MaxUShortOutOfBounds
+================================================================================
+OK: MaxUShortOutOfBounds error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --MaxUShortOutOfBounds: higher than maximum value for type
+
+
+11. MaxIntOutOfBounds
+================================================================================
+OK: MaxIntOutOfBounds error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --MaxIntOutOfBounds: higher than maximum value for type
+
+
+12. MaxUIntOutOfBounds
+================================================================================
+OK: MaxUIntOutOfBounds error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --MaxUIntOutOfBounds: higher than maximum value for type
+
+
+13. DefCharOutOfMaxBounds
+================================================================================
+OK: DefCharOutOfMaxBounds error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --DefCharOutOfMaxBounds: higher than maximum value for type
+
+
+14. DefCharOutOfMinBounds
+================================================================================
+OK: DefCharOutOfMinBounds error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --DefCharOutOfMinBounds: lower than minimum value for type
+
+
+15. DefUCharOutOfMaxBounds
+================================================================================
+OK: DefUCharOutOfMaxBounds error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --DefUCharOutOfMaxBounds: higher than maximum value for type
+
+
+16. DefUCharOutOfMinBounds
+================================================================================
+OK: DefUCharOutOfMinBounds error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --DefUCharOutOfMinBounds: lower than minimum value for type
+
+
+17. DefShortOutOfMaxBounds
+================================================================================
+OK: DefShortOutOfMaxBounds error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --DefShortOutOfMaxBounds: higher than maximum value for type
+
+
+18. DefShortOutOfMinBounds
+================================================================================
+OK: DefShortOutOfMinBounds error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --DefShortOutOfMinBounds: lower than minimum value for type
+
+
+19. DefUShortOutOfMaxBounds
+================================================================================
+OK: DefUShortOutOfMaxBounds error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --DefUShortOutOfMaxBounds: higher than maximum value for type
+
+
+20. DefUShortOutOfMinBounds
+================================================================================
+OK: DefUShortOutOfMinBounds error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --DefUShortOutOfMinBounds: lower than minimum value for type
+
+
+21. DefIntOutOfMaxBounds
+================================================================================
+OK: DefIntOutOfMaxBounds error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --DefIntOutOfMaxBounds: higher than maximum value for type
+
+
+22. DefIntOutOfMinBounds
+================================================================================
+OK: DefIntOutOfMinBounds error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --DefIntOutOfMinBounds: lower than minimum value for type
+
+
+23. DefUIntOutOfMaxBounds
+================================================================================
+OK: DefUIntOutOfMaxBounds error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --DefUIntOutOfMaxBounds: higher than maximum value for type
+
+
+24. DefUIntOutOfMinBounds
+================================================================================
+OK: DefUIntOutOfMinBounds error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --DefUIntOutOfMinBounds: lower than minimum value for type
+
+
+25. CharMaxLimitLessThanMinLimit
+================================================================================
+OK: CharMaxLimitLessThanMinLimit error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --CharMaxLimitLessThanMinLimit: Minimum limit is higher than the maximum limit for option
+
+
+26. UCharMaxLimitLessThanMinLimit
+================================================================================
+OK: UCharMaxLimitLessThanMinLimit error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --UCharMaxLimitLessThanMinLimit: Minimum limit is higher than the maximum limit for option
+
+
+27. ShortMaxLimitLessThanMinLimit
+================================================================================
+OK: ShortMaxLimitLessThanMinLimit error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --ShortMaxLimitLessThanMinLimit: Minimum limit is higher than the maximum limit for option
+
+
+28. UShortMaxLimitLessThanMinLimit
+================================================================================
+OK: UShortMaxLimitLessThanMinLimit error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --UShortMaxLimitLessThanMinLimit: Minimum limit is higher than the maximum limit for option
+
+
+29. IntMaxLimitLessThanMinLimit
+================================================================================
+OK: IntMaxLimitLessThanMinLimit error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --IntMaxLimitLessThanMinLimit: Minimum limit is higher than the maximum limit for option
+
+
+30. UIntMaxLimitLessThanMinLimit
+================================================================================
+OK: UIntMaxLimitLessThanMinLimit error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --UIntMaxLimitLessThanMinLimit: Minimum limit is higher than the maximum limit for option
+
+
+31. LongMaxLimitLessThanMinLimit
+================================================================================
+OK: LongMaxLimitLessThanMinLimit error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --LongMaxLimitLessThanMinLimit: Minimum limit is higher than the maximum limit for option
+
+
+32. ULongMaxLimitLessThanMinLimit
+================================================================================
+OK: ULongMaxLimitLessThanMinLimit error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --ULongMaxLimitLessThanMinLimit: Minimum limit is higher than the maximum limit for option
+
+
+33. CharDefValueLessThanMinLimit
+================================================================================
+OK: CharDefValueLessThanMinLimit error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --CharDefValueLessThanMinLimit: Default value is lower than the minimum limit for option
+
+
+34. UCharDefValueLessThanMinLimit
+================================================================================
+OK: UCharDefValueLessThanMinLimit error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --UCharDefValueLessThanMinLimit: Default value is lower than the minimum limit for option
+
+
+35. ShortDefValueLessThanMinLimit
+================================================================================
+OK: ShortDefValueLessThanMinLimit error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --ShortDefValueLessThanMinLimit: Default value is lower than the minimum limit for option
+
+
+36. UShortDefValueLessThanMinLimit
+================================================================================
+OK: UShortDefValueLessThanMinLimit error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --UShortDefValueLessThanMinLimit: Default value is lower than the minimum limit for option
+
+
+37. IntDefValueLessThanMinLimit
+================================================================================
+OK: IntDefValueLessThanMinLimit error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --IntDefValueLessThanMinLimit: Default value is lower than the minimum limit for option
+
+
+38. UIntDefValueLessThanMinLimit
+================================================================================
+OK: UIntDefValueLessThanMinLimit error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --UIntDefValueLessThanMinLimit: Default value is lower than the minimum limit for option
+
+
+39. LongDefValueLessThanMinLimit
+================================================================================
+OK: LongDefValueLessThanMinLimit error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --LongDefValueLessThanMinLimit: Default value is lower than the minimum limit for option
+
+
+40. ULongDefValueLessThanMinLimit
+================================================================================
+OK: ULongDefValueLessThanMinLimit error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --ULongDefValueLessThanMinLimit: Default value is lower than the minimum limit for option
+
+
+41. CharDefValueExceedsMaxLimit
+================================================================================
+OK: CharDefValueExceedsMaxLimit error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --CharDefValueExceedsMaxLimit: Default value is higher than the maximum limit for option
+
+
+42. UCharDefValueExceedsMaxLimit
+================================================================================
+OK: UCharDefValueExceedsMaxLimit error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --UCharDefValueExceedsMaxLimit: Default value is higher than the maximum limit for option
+
+
+43. ShortDefValueExceedsMaxLimit
+================================================================================
+OK: ShortDefValueExceedsMaxLimit error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --ShortDefValueExceedsMaxLimit: Default value is higher than the maximum limit for option
+
+
+44. UShortDefValueExceedsMaxLimit
+================================================================================
+OK: UShortDefValueExceedsMaxLimit error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --UShortDefValueExceedsMaxLimit: Default value is higher than the maximum limit for option
+
+
+45. IntDefValueExceedsMaxLimit
+================================================================================
+OK: IntDefValueExceedsMaxLimit error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --IntDefValueExceedsMaxLimit: Default value is higher than the maximum limit for option
+
+
+46. UIntDefValueExceedsMaxLimit
+================================================================================
+OK: UIntDefValueExceedsMaxLimit error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --UIntDefValueExceedsMaxLimit: Default value is higher than the maximum limit for option
+
+
+47. LongDefValueExceedsMaxLimit
+================================================================================
+OK: LongDefValueExceedsMaxLimit error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --LongDefValueExceedsMaxLimit: Default value is higher than the maximum limit for option
+
+
+48. ULongDefValueExceedsMaxLimit
+================================================================================
+OK: ULongDefValueExceedsMaxLimit error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --ULongDefValueExceedsMaxLimit: Default value is higher than the maximum limit for option
+
+
+49. NoOptionName
+================================================================================
+OK: NoOptionName error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: No Name: Option without name
+
+
+50. InvalidType
+================================================================================
+OK: InvalidType error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --InvalidType: Invalid 'type' for option
+
+
+51. InvalidSort
+================================================================================
+OK: InvalidSort error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --InvalidSort: Invalid 'sort' for option
+
+
+52. NullValue
+================================================================================
+OK: NullValue error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --NullValue: NULL value pointer for option
+
+
+53. NullDescription
+================================================================================
+OK: NullDescription error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --NullDescription: NULL description pointer for option
+
+
+54. ShortNameTakenByBuiltinShortName
+================================================================================
+OK: ShortNameTakenByBuiltinShortName error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: -u: Option short-name already in use (by builtin short-name)
+
+
+55. ShortNameTakenByBuiltinLongName
+================================================================================
+OK: ShortNameTakenByBuiltinLongName error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --usage: Option short-name already in use (by builtin long-name)
+
+
+56. LongNameTakenByBuiltinShortName
+================================================================================
+OK: LongNameTakenByBuiltinShortName error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: -u: Option long-name already in use (by builtin short-name)
+
+
+57. LongNameTakenByBuiltinLongName
+================================================================================
+OK: LongNameTakenByBuiltinLongName error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: --usage: Option long-name already in use (by builtin long-name)
+
+
+58. ShortNameTakenByOptionShortName
+================================================================================
+OK: ShortNameTakenByOptionShortName error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: : Option short-name already in use (by other options short-name)
+
+
+59. ShortNameTakenByOptionLongName
+================================================================================
+OK: ShortNameTakenByOptionLongName error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: : Option long-name already in use (by other options short-name)
+
+
+60. LongNameTakenByOptionShortName
+================================================================================
+OK: LongNameTakenByOptionShortName error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: : Option short-name already in use (by other options short-name)
+
+
+61. LongNameTakenByOptionLongName
+================================================================================
+OK: LongNameTakenByOptionLongName error correctly detected
+Error 1: global: corArgVectorCheck error
+Error 2: : Option long-name already in use (by other options long-name)
+
+
+62. ShortLongNameIsTheSame
+================================================================================
+OK: no error for ShortLongNameIsTheSame
+
+

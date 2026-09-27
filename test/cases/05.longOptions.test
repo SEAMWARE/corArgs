@@ -1,0 +1,3 @@
+NAME:     Long Options
+EXPECT:   test/expect/05.longOptions.expect
+RUN:      test/run/05.longOptions.run

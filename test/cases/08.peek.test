@@ -1,0 +1,3 @@
+NAME:     peek
+EXPECT:   test/expect/08.peek.expect
+RUN:      test/run/08.peek.run

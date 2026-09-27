@@ -1,0 +1,175 @@
+#
+# Args to use in test:
+#
+#   Option       Type      DEF   MIN        MAX
+#   -----------  --------  ---   ---        ---
+#   --iMin:      CorArgInt      1     -5       - NO-LIMIT
+#   --iMax:      CorArgInt      1     NO-LIMIT - 10
+#   --iMinMax:   CorArgInt      1     -5       - 10
+#   --uiMin:     CorArgUInt     5      5       - NO-LIMIT
+#   --uiMax:     CorArgUInt     5     NO-LIMIT - 10
+#   --uiMinMax:  CorArgUInt     5      5       - 10
+#
+# Test Cases:
+#   01. Set valid values for all six options (all on limits):
+#       iMin:     -5
+#       iMax:     10
+#       iMinMax:  -5
+#       uiMin:     5
+#       uiMax:    10
+#       uiMinMax:  5
+#
+#   02. Too high value for a signed int (2147483648) using --iMin
+#   03. Too low value for a signed int (-2147483649) using --iMax
+#   04. Too high value for an unsigned int (4294967296) using --uiMin
+#   05. Too low value for an unsigned int (-1) using --uiMax
+#
+#   06. Too low value for iMin (-6)
+#   07. Too high value for iMax (11)
+#   08. Too low value for iMinMax (-6)
+#   09. Too high value for iMinMax (11)
+#
+#   10. Too low value for uiMin (4)
+#   11. Too high value for uiMax (11)
+#   12. Too low value for uiMinMax (4)
+#   13. Too high value for uiMinMax (11)
+#
+#   14. Hexadecimal value --intVal 0x10,    see intVal == 16
+#   15. Hexadecimal value --intVal H'11,    see intVal == 17
+#   16. Hexadecimal value --intVal h'12,    see intVal == 18
+#   17. Octadecimal value --intVal O'102,   see intVal == 19
+#   18. Octadecimal value --intVal o'24,    see intVal == 20
+#   19. Binary      value --intVal B'10011, see intVal == 21
+#
+
+echo "01. Set valid values for all six options (all on limits)"
+echo "================================================================================"
+corArgsTest --iMin -5 --iMax 10 --iMinMax -5 --uiMin 5 --uiMax 10 --uiMinMax 5
+echo
+echo
+
+
+echo "02. Too high value for a signed int (2147483648) using --iMin"
+echo "================================================================================"
+corArgsTest --iMin 2147483648
+echo
+echo
+
+
+echo "03. Too low value for a signed int (-2147483649) using --iMax"
+echo "================================================================================"
+corArgsTest --iMax -2147483649
+echo
+echo
+
+
+echo "04. Too high value for an unsigned int (4294967296) using --uiMin"
+echo "================================================================================"
+corArgsTest --uiMin 4294967296
+echo
+echo
+
+
+echo "05. Too low value for an unsigned int (-1) using --uiMax"
+echo "================================================================================"
+corArgsTest --uiMax -1
+echo
+echo
+
+
+echo "06. Too low value for iMin (-6)"
+echo "================================================================================"
+corArgsTest --iMin -6
+echo
+echo
+
+
+echo "07. Too high value for iMax (11)"
+echo "================================================================================"
+corArgsTest --iMax 11
+echo
+echo
+
+
+echo "08. Too low value for iMinMax (-6)"
+echo "================================================================================"
+corArgsTest --iMinMax -6
+echo
+echo
+
+
+echo "09. Too high value for iMinMax (11)"
+echo "================================================================================"
+corArgsTest --iMinMax 11
+echo
+echo
+
+
+echo "10. Too low value for uiMin (4)"
+echo "================================================================================"
+corArgsTest --uiMin 4
+echo
+echo
+
+
+echo "11. Too high value for uiMax (11)"
+echo "================================================================================"
+corArgsTest --uiMax 11
+echo
+echo
+
+
+echo "12. Too low value for uiMinMax (4)"
+echo "================================================================================"
+corArgsTest --uiMinMax 4
+echo
+echo
+
+
+echo "13. Too high value for uiMinMax (11)"
+echo "================================================================================"
+corArgsTest --uiMinMax 11
+echo
+echo
+
+
+echo "14. Hexadecimal value --intVal 0x10, see intVal == 16"
+echo "================================================================================"
+corArgsTest --intVal 0x10
+echo
+echo
+
+
+echo "15. Hexadecimal value --intVal H'11, see intVal == 17"
+echo "================================================================================"
+corArgsTest --intVal "H'11"
+echo
+echo
+
+
+echo "16. Hexadecimal value --intVal h'12, see intVal == 18"
+echo "================================================================================"
+corArgsTest --intVal "h'12"
+echo
+echo
+
+
+echo "17. Octadecimal value --intVal O'23, see intVal == 19"
+echo "================================================================================"
+corArgsTest --intVal "O'23"
+echo
+echo
+
+
+echo "18. Octadecimal value --intVal o'24, see intVal == 20"
+echo "================================================================================"
+corArgsTest --intVal "o'24"
+echo
+echo
+
+
+echo "19. Binary value --intVal B'10101, see intVal == 21"
+echo "================================================================================"
+corArgsTest --intVal "B'10101"
+echo
+echo

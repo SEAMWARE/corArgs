@@ -1,0 +1,13 @@
+echo "01. Boolean Peek"
+echo "================================================================================"
+corArgsTest --peek
+echo
+echo
+
+
+echo "02. String Peek"
+echo "==============================================================================="
+corArgsTest --speek "Peek Test String"
+echo
+echo
+

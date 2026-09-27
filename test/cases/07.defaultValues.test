@@ -1,0 +1,3 @@
+NAME:     default values
+EXPECT:   test/expect/07.defaultValues.expect
+RUN:      test/run/07.defaultValues.run

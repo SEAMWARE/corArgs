@@ -1,0 +1,26 @@
+echo "01. All three bool options together"
+echo "================================================================================"
+corArgsTest -123
+echo
+echo
+
+
+echo "02. All three bool options one by one, shortnames"
+echo "================================================================================"
+corArgsTest -1 -2 -3
+echo
+echo
+
+
+echo "03. All three bool options one by one, longnames"
+echo "================================================================================"
+corArgsTest --b1 --b2 --b3
+echo
+echo
+
+
+echo "04. One bool option, using shortname"
+echo "================================================================================"
+corArgsTest -1
+echo
+echo

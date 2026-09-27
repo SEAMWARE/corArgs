@@ -1,0 +1,353 @@
+01. Set valid values for all six options (all on limits)
+================================================================================
+cMin:      1
+cMax:      1
+cMinMax:   1
+charVal:   1
+sMin:      2
+sMax:      2
+sMinMax:   2
+shortVal:  2
+iMin:      3
+iMax:      3
+iMinMax:   3
+intVal:    3
+llMin:     -5
+llMax:     10
+llMinMax:  -5
+longVal:   4
+ucMin:     5
+ucMax:     5
+ucMinMax:  5
+usMin:     6
+usMax:     6
+usMinMax:  6
+uiMin:     7
+uiMax:     7
+uiMinMax:  7
+ullMin:    5
+ullMax:    10
+ullMinMax: 5
+fMin:      55.000000
+fMax:      56.000000
+fMinMax:   57.000000
+strMin:    060
+strMax:    060
+strMinMax: 060
+b1:        false
+b2:        false
+b3:        false
+
+
+02. Too high value for a signed long long (9223372036854775808) using --llMin
+================================================================================
+corArgsTest: invalid value (9223372036854775808) for integer option '--llMin'
+Error 1: --llMin: out of bounds
+
+
+03. Too low value for a signed long long (-9223372036854775809) using --llMax
+================================================================================
+corArgsTest: invalid value (-9223372036854775809) for integer option '--llMax'
+Error 1: --llMax: out of bounds
+
+
+04. Too high value for an unsigned long long (18446744073709551616) using --ullMin
+================================================================================
+corArgsTest: invalid value (18446744073709551616) for integer option '--ullMin'
+Error 1: --ullMin: out of bounds
+
+
+06. Too low value for llMin (-6)
+================================================================================
+corArgsTest: value -6 for option '--llMin' is inferior to -5, its lower limit
+Error 1: --llMin: long out of min limit
+
+
+07. Too high value for llMax (11)
+================================================================================
+corArgsTest: value 11 for option '--llMax' exceeds 10, its upper limit
+Error 1: --llMax: long out of max limit
+
+
+08. Too low value for llMinMax (-6)
+================================================================================
+corArgsTest: value -6 for option '--llMinMax' is inferior to its lower limit. Allowed range: -5-10
+Error 1: --llMinMax: long out of min limit
+
+
+09. Too high value for llMinMax (11)
+================================================================================
+corArgsTest: value 11 for option '--llMinMax' exceeds its upper limit. Allowed range: -5-10
+Error 1: --llMinMax: long out of max limit
+
+
+10. Too low value for ullMin (4)
+================================================================================
+corArgsTest: value 4 for option '--ullMin' is inferior to 5, its lower limit
+Error 1: --ullMin: unsigned long out of min limit
+
+
+11. Too high value for ullMax (11)
+================================================================================
+corArgsTest: value 11 for option '--ullMax' exceeds 10, its upper limit
+Error 1: --ullMax: unsigned long out of max limit
+
+
+12. Too low value for ullMinMax (4)
+================================================================================
+corArgsTest: value 4 for option '--ullMinMax' is inferior to its lower limit. Allowed range: 5-10
+Error 1: --ullMinMax: unsigned long out of min limit
+
+
+13. Too high value for ullMinMax (11)
+================================================================================
+corArgsTest: value 11 for option '--ullMinMax' exceeds its upper limit. Allowed range: 5-10
+Error 1: --ullMinMax: unsigned long out of max limit
+
+
+14. Hexadecimal value --longVal 0x10, see longVal == 16
+================================================================================
+cMin:      1
+cMax:      1
+cMinMax:   1
+charVal:   1
+sMin:      2
+sMax:      2
+sMinMax:   2
+shortVal:  2
+iMin:      3
+iMax:      3
+iMinMax:   3
+intVal:    3
+llMin:     4
+llMax:     4
+llMinMax:  4
+longVal:   16
+ucMin:     5
+ucMax:     5
+ucMinMax:  5
+usMin:     6
+usMax:     6
+usMinMax:  6
+uiMin:     7
+uiMax:     7
+uiMinMax:  7
+ullMin:    8
+ullMax:    8
+ullMinMax: 8
+fMin:      55.000000
+fMax:      56.000000
+fMinMax:   57.000000
+strMin:    060
+strMax:    060
+strMinMax: 060
+b1:        false
+b2:        false
+b3:        false
+
+
+15. Hexadecimal value --longVal H'11, see longVal == 17
+================================================================================
+cMin:      1
+cMax:      1
+cMinMax:   1
+charVal:   1
+sMin:      2
+sMax:      2
+sMinMax:   2
+shortVal:  2
+iMin:      3
+iMax:      3
+iMinMax:   3
+intVal:    3
+llMin:     4
+llMax:     4
+llMinMax:  4
+longVal:   17
+ucMin:     5
+ucMax:     5
+ucMinMax:  5
+usMin:     6
+usMax:     6
+usMinMax:  6
+uiMin:     7
+uiMax:     7
+uiMinMax:  7
+ullMin:    8
+ullMax:    8
+ullMinMax: 8
+fMin:      55.000000
+fMax:      56.000000
+fMinMax:   57.000000
+strMin:    060
+strMax:    060
+strMinMax: 060
+b1:        false
+b2:        false
+b3:        false
+
+
+16. Hexadecimal value --longVal h'12, see longVal == 18
+================================================================================
+cMin:      1
+cMax:      1
+cMinMax:   1
+charVal:   1
+sMin:      2
+sMax:      2
+sMinMax:   2
+shortVal:  2
+iMin:      3
+iMax:      3
+iMinMax:   3
+intVal:    3
+llMin:     4
+llMax:     4
+llMinMax:  4
+longVal:   18
+ucMin:     5
+ucMax:     5
+ucMinMax:  5
+usMin:     6
+usMax:     6
+usMinMax:  6
+uiMin:     7
+uiMax:     7
+uiMinMax:  7
+ullMin:    8
+ullMax:    8
+ullMinMax: 8
+fMin:      55.000000
+fMax:      56.000000
+fMinMax:   57.000000
+strMin:    060
+strMax:    060
+strMinMax: 060
+b1:        false
+b2:        false
+b3:        false
+
+
+17. Octadecimal value --longVal O'23, see longVal == 19
+================================================================================
+cMin:      1
+cMax:      1
+cMinMax:   1
+charVal:   1
+sMin:      2
+sMax:      2
+sMinMax:   2
+shortVal:  2
+iMin:      3
+iMax:      3
+iMinMax:   3
+intVal:    3
+llMin:     4
+llMax:     4
+llMinMax:  4
+longVal:   19
+ucMin:     5
+ucMax:     5
+ucMinMax:  5
+usMin:     6
+usMax:     6
+usMinMax:  6
+uiMin:     7
+uiMax:     7
+uiMinMax:  7
+ullMin:    8
+ullMax:    8
+ullMinMax: 8
+fMin:      55.000000
+fMax:      56.000000
+fMinMax:   57.000000
+strMin:    060
+strMax:    060
+strMinMax: 060
+b1:        false
+b2:        false
+b3:        false
+
+
+18. Octadecimal value --longVal o'24, see longVal == 20
+================================================================================
+cMin:      1
+cMax:      1
+cMinMax:   1
+charVal:   1
+sMin:      2
+sMax:      2
+sMinMax:   2
+shortVal:  2
+iMin:      3
+iMax:      3
+iMinMax:   3
+intVal:    3
+llMin:     4
+llMax:     4
+llMinMax:  4
+longVal:   20
+ucMin:     5
+ucMax:     5
+ucMinMax:  5
+usMin:     6
+usMax:     6
+usMinMax:  6
+uiMin:     7
+uiMax:     7
+uiMinMax:  7
+ullMin:    8
+ullMax:    8
+ullMinMax: 8
+fMin:      55.000000
+fMax:      56.000000
+fMinMax:   57.000000
+strMin:    060
+strMax:    060
+strMinMax: 060
+b1:        false
+b2:        false
+b3:        false
+
+
+19. Binary value --longVal B'10101, see longVal == 21
+================================================================================
+cMin:      1
+cMax:      1
+cMinMax:   1
+charVal:   1
+sMin:      2
+sMax:      2
+sMinMax:   2
+shortVal:  2
+iMin:      3
+iMax:      3
+iMinMax:   3
+intVal:    3
+llMin:     4
+llMax:     4
+llMinMax:  4
+longVal:   21
+ucMin:     5
+ucMax:     5
+ucMinMax:  5
+usMin:     6
+usMax:     6
+usMinMax:  6
+uiMin:     7
+uiMax:     7
+uiMinMax:  7
+ullMin:    8
+ullMax:    8
+ullMinMax: 8
+fMin:      55.000000
+fMax:      56.000000
+fMinMax:   57.000000
+strMin:    060
+strMax:    060
+strMinMax: 060
+b1:        false
+b2:        false
+b3:        false
+
+

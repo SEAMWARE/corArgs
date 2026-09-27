@@ -1,0 +1,3 @@
+NAME:     Int Options
+EXPECT:   test/expect/04.intOptions.expect
+RUN:      test/run/04.intOptions.run

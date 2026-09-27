@@ -1,0 +1,3 @@
+NAME:     Char Options
+EXPECT:   test/expect/02.charOptions.expect
+RUN:      test/run/02.charOptions.run

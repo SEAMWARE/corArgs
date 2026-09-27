@@ -1,0 +1,3 @@
+NAME:     Bool Options
+EXPECT:   test/expect/06.boolOptions.expect
+RUN:      test/run/06.boolOptions.run

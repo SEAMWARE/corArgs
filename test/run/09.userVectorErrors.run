@@ -1,0 +1,432 @@
+echo "01. MinCharOutOfBounds"
+echo "================================================================================"
+corArgsTest --ktest --case MinCharOutOfBounds
+echo
+echo
+
+
+echo "02. MinUCharOutOfBounds"
+echo "================================================================================"
+corArgsTest --ktest --case MinUCharOutOfBounds
+echo
+echo
+
+
+echo "03. MinShortOutOfBounds"
+echo "================================================================================"
+corArgsTest --ktest --case MinShortOutOfBounds
+echo
+echo
+
+
+echo "04. MinUShortOutOfBounds"
+echo "================================================================================"
+corArgsTest --ktest --case MinUShortOutOfBounds
+echo
+echo
+
+
+echo "05. MinIntOutOfBounds"
+echo "================================================================================"
+corArgsTest --ktest --case MinIntOutOfBounds
+echo
+echo
+
+
+echo "06. MinUIntOutOfBounds"
+echo "================================================================================"
+corArgsTest --ktest --case MinUIntOutOfBounds
+echo
+echo
+
+
+echo "07. MaxCharOutOfBounds"
+echo "================================================================================"
+corArgsTest --ktest --case MaxCharOutOfBounds
+echo
+echo
+
+
+echo "08. MaxUCharOutOfBounds"
+echo "================================================================================"
+corArgsTest --ktest --case MaxUCharOutOfBounds
+echo
+echo
+
+
+echo "09. MaxShortOutOfBounds"
+echo "================================================================================"
+corArgsTest --ktest --case MaxShortOutOfBounds
+echo
+echo
+
+
+echo "10. MaxUShortOutOfBounds"
+echo "================================================================================"
+corArgsTest --ktest --case MaxUShortOutOfBounds
+echo
+echo
+
+
+echo "11. MaxIntOutOfBounds"
+echo "================================================================================"
+corArgsTest --ktest --case MaxIntOutOfBounds
+echo
+echo
+
+
+echo "12. MaxUIntOutOfBounds"
+echo "================================================================================"
+corArgsTest --ktest --case MaxUIntOutOfBounds
+echo
+echo
+
+
+echo "13. DefCharOutOfMaxBounds"
+echo "================================================================================"
+corArgsTest --ktest --case DefCharOutOfMaxBounds
+echo
+echo
+
+
+echo "14. DefCharOutOfMinBounds"
+echo "================================================================================"
+corArgsTest --ktest --case DefCharOutOfMinBounds
+echo
+echo
+
+
+echo "15. DefUCharOutOfMaxBounds"
+echo "================================================================================"
+corArgsTest --ktest --case DefUCharOutOfMaxBounds
+echo
+echo
+
+
+echo "16. DefUCharOutOfMinBounds"
+echo "================================================================================"
+corArgsTest --ktest --case DefUCharOutOfMinBounds
+echo
+echo
+
+
+echo "17. DefShortOutOfMaxBounds"
+echo "================================================================================"
+corArgsTest --ktest --case DefShortOutOfMaxBounds
+echo
+echo
+
+
+echo "18. DefShortOutOfMinBounds"
+echo "================================================================================"
+corArgsTest --ktest --case DefShortOutOfMinBounds
+echo
+echo
+
+
+echo "19. DefUShortOutOfMaxBounds"
+echo "================================================================================"
+corArgsTest --ktest --case DefUShortOutOfMaxBounds
+echo
+echo
+
+
+echo "20. DefUShortOutOfMinBounds"
+echo "================================================================================"
+corArgsTest --ktest --case DefUShortOutOfMinBounds
+echo
+echo
+
+
+echo "21. DefIntOutOfMaxBounds"
+echo "================================================================================"
+corArgsTest --ktest --case DefIntOutOfMaxBounds
+echo
+echo
+
+
+echo "22. DefIntOutOfMinBounds"
+echo "================================================================================"
+corArgsTest --ktest --case DefIntOutOfMinBounds
+echo
+echo
+
+
+echo "23. DefUIntOutOfMaxBounds"
+echo "================================================================================"
+corArgsTest --ktest --case DefUIntOutOfMaxBounds
+echo
+echo
+
+
+echo "24. DefUIntOutOfMinBounds"
+echo "================================================================================"
+corArgsTest --ktest --case DefUIntOutOfMinBounds
+echo
+echo
+
+
+echo "25. CharMaxLimitLessThanMinLimit"
+echo "================================================================================"
+corArgsTest --ktest --case CharMaxLimitLessThanMinLimit
+echo
+echo
+
+
+echo "26. UCharMaxLimitLessThanMinLimit"
+echo "================================================================================"
+corArgsTest --ktest --case UCharMaxLimitLessThanMinLimit
+echo
+echo
+
+
+echo "27. ShortMaxLimitLessThanMinLimit"
+echo "================================================================================"
+corArgsTest --ktest --case ShortMaxLimitLessThanMinLimit
+echo
+echo
+
+
+echo "28. UShortMaxLimitLessThanMinLimit"
+echo "================================================================================"
+corArgsTest --ktest --case UShortMaxLimitLessThanMinLimit
+echo
+echo
+
+
+echo "29. IntMaxLimitLessThanMinLimit"
+echo "================================================================================"
+corArgsTest --ktest --case IntMaxLimitLessThanMinLimit
+echo
+echo
+
+
+echo "30. UIntMaxLimitLessThanMinLimit"
+echo "================================================================================"
+corArgsTest --ktest --case UIntMaxLimitLessThanMinLimit
+echo
+echo
+
+
+echo "31. LongMaxLimitLessThanMinLimit"
+echo "================================================================================"
+corArgsTest --ktest --case LongMaxLimitLessThanMinLimit
+echo
+echo
+
+
+echo "32. ULongMaxLimitLessThanMinLimit"
+echo "================================================================================"
+corArgsTest --ktest --case ULongMaxLimitLessThanMinLimit
+echo
+echo
+
+
+echo "33. CharDefValueLessThanMinLimit"
+echo "================================================================================"
+corArgsTest --ktest --case CharDefValueLessThanMinLimit
+echo
+echo
+
+
+echo "34. UCharDefValueLessThanMinLimit"
+echo "================================================================================"
+corArgsTest --ktest --case UCharDefValueLessThanMinLimit
+echo
+echo
+
+
+echo "35. ShortDefValueLessThanMinLimit"
+echo "================================================================================"
+corArgsTest --ktest --case ShortDefValueLessThanMinLimit
+echo
+echo
+
+
+echo "36. UShortDefValueLessThanMinLimit"
+echo "================================================================================"
+corArgsTest --ktest --case UShortDefValueLessThanMinLimit
+echo
+echo
+
+
+echo "37. IntDefValueLessThanMinLimit"
+echo "================================================================================"
+corArgsTest --ktest --case IntDefValueLessThanMinLimit
+echo
+echo
+
+
+echo "38. UIntDefValueLessThanMinLimit"
+echo "================================================================================"
+corArgsTest --ktest --case UIntDefValueLessThanMinLimit
+echo
+echo
+
+
+echo "39. LongDefValueLessThanMinLimit"
+echo "================================================================================"
+corArgsTest --ktest --case LongDefValueLessThanMinLimit
+echo
+echo
+
+
+echo "40. ULongDefValueLessThanMinLimit"
+echo "================================================================================"
+corArgsTest --ktest --case ULongDefValueLessThanMinLimit
+echo
+echo
+
+
+echo "41. CharDefValueExceedsMaxLimit"
+echo "================================================================================"
+corArgsTest --ktest --case CharDefValueExceedsMaxLimit
+echo
+echo
+
+
+echo "42. UCharDefValueExceedsMaxLimit"
+echo "================================================================================"
+corArgsTest --ktest --case UCharDefValueExceedsMaxLimit
+echo
+echo
+
+
+echo "43. ShortDefValueExceedsMaxLimit"
+echo "================================================================================"
+corArgsTest --ktest --case ShortDefValueExceedsMaxLimit
+echo
+echo
+
+
+echo "44. UShortDefValueExceedsMaxLimit"
+echo "================================================================================"
+corArgsTest --ktest --case UShortDefValueExceedsMaxLimit
+echo
+echo
+
+
+echo "45. IntDefValueExceedsMaxLimit"
+echo "================================================================================"
+corArgsTest --ktest --case IntDefValueExceedsMaxLimit
+echo
+echo
+
+
+echo "46. UIntDefValueExceedsMaxLimit"
+echo "================================================================================"
+corArgsTest --ktest --case UIntDefValueExceedsMaxLimit
+echo
+echo
+
+
+echo "47. LongDefValueExceedsMaxLimit"
+echo "================================================================================"
+corArgsTest --ktest --case LongDefValueExceedsMaxLimit
+echo
+echo
+
+
+echo "48. ULongDefValueExceedsMaxLimit"
+echo "================================================================================"
+corArgsTest --ktest --case ULongDefValueExceedsMaxLimit
+echo
+echo
+
+
+echo "49. NoOptionName"
+echo "================================================================================"
+corArgsTest --ktest --case NoOptionName
+echo
+echo
+
+
+echo "50. InvalidType"
+echo "================================================================================"
+corArgsTest --ktest --case InvalidType
+echo
+echo
+
+
+echo "51. InvalidSort"
+echo "================================================================================"
+corArgsTest --ktest --case InvalidSort
+echo
+echo
+
+
+echo "52. NullValue"
+echo "================================================================================"
+corArgsTest --ktest --case NullValue
+echo
+echo
+
+
+echo "53. NullDescription"
+echo "================================================================================"
+corArgsTest --ktest --case NullDescription
+echo
+echo
+
+
+echo "54. ShortNameTakenByBuiltinShortName"
+echo "================================================================================"
+corArgsTest --ktest --case ShortNameTakenByBuiltinShortName
+echo
+echo
+
+
+echo "55. ShortNameTakenByBuiltinLongName"
+echo "================================================================================"
+corArgsTest --ktest --case ShortNameTakenByBuiltinLongName
+echo
+echo
+
+
+echo "56. LongNameTakenByBuiltinShortName"
+echo "================================================================================"
+corArgsTest --ktest --case LongNameTakenByBuiltinShortName
+echo
+echo
+
+
+echo "57. LongNameTakenByBuiltinLongName"
+echo "================================================================================"
+corArgsTest --ktest --case LongNameTakenByBuiltinLongName
+echo
+echo
+
+
+echo "58. ShortNameTakenByOptionShortName"
+echo "================================================================================"
+corArgsTest --ktest --case ShortNameTakenByOptionShortName
+echo
+echo
+
+
+echo "59. ShortNameTakenByOptionLongName"
+echo "================================================================================"
+corArgsTest --ktest --case ShortNameTakenByOptionLongName
+echo
+echo
+
+
+echo "60. LongNameTakenByOptionShortName"
+echo "================================================================================"
+corArgsTest --ktest --case LongNameTakenByOptionShortName
+echo
+echo
+
+
+echo "61. LongNameTakenByOptionLongName"
+echo "================================================================================"
+corArgsTest --ktest --case LongNameTakenByOptionLongName
+echo
+echo
+
+
+echo "62. ShortLongNameIsTheSame"
+echo "================================================================================"
+corArgsTest --ktest --case ShortLongNameIsTheSame
+echo
+echo

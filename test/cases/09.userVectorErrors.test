@@ -1,0 +1,3 @@
+NAME:     userVectorErrors
+EXPECT:   test/expect/09.userVectorErrors.expect
+RUN:      test/run/09.userVectorErrors.run

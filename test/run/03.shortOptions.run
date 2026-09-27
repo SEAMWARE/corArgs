@@ -1,0 +1,175 @@
+#
+# Args to use in test:
+#
+#   Option       Type      DEF   MIN        MAX
+#   -----------  --------  ---   ---        ---
+#   --sMin:      CorArgShort    1     -5       - NO-LIMIT
+#   --sMax:      CorArgShort    1     NO-LIMIT - 10
+#   --sMinMax:   CorArgShort    1     -5       - 10
+#   --usMin:     CorArgUShort   5      5       - NO-LIMIT
+#   --usMax:     CorArgUShort   5     NO-LIMIT - 10
+#   --usMinMax:  CorArgUShort   5      5       - 10
+#
+# Test Cases:
+#   01. Set valid values for all six options (all on limits):
+#       sMin:     -5
+#       sMax:     10
+#       sMinMax:  -5
+#       usMin:     5
+#       usMax:    10
+#       usMinMax:  5
+#
+#   02. Too high value for a signed short (32768) using --sMin
+#   03. Too low value for a signed short (-32769) using --sMax
+#   04. Too high value for an unsigned short (65536) using --usMin
+#   05. Too low value for an unsigned short (-1) using --usMax
+#
+#   06. Too low value for sMin (-6)
+#   07. Too high value for sMax (11)
+#   08. Too low value for sMinMax (-6)
+#   09. Too high value for sMinMax (11)
+#
+#   10. Too low value for usMin (4)
+#   11. Too high value for usMax (11)
+#   12. Too low value for usMinMax (4)
+#   13. Too high value for usMinMax (11)
+#
+#   14. Hexadecimal value --shortVal 0x10,    see shortVal == 16
+#   15. Hexadecimal value --shortVal H'11,    see shortVal == 17
+#   16. Hexadecimal value --shortVal h'12,    see shortVal == 18
+#   17. Octadecimal value --shortVal O'102,   see shortVal == 19
+#   18. Octadecimal value --shortVal o'24,    see shortVal == 20
+#   19. Binary      value --shortVal B'10011, see shortVal == 21
+#
+
+echo "01. Set valid values for all six options (all on limits)"
+echo "================================================================================"
+corArgsTest --sMin -5 --sMax 10 --sMinMax -5 --usMin 5 --usMax 10 --usMinMax 5
+echo
+echo
+
+
+echo "02. Too high value for a signed short (32768) using --sMin"
+echo "================================================================================"
+corArgsTest --sMin 32768
+echo
+echo
+
+
+echo "03. Too low value for a signed short (-32769) using --sMax"
+echo "================================================================================"
+corArgsTest --sMax -32769
+echo
+echo
+
+
+echo "04. Too high value for an unsigned short (65536) using --usMin"
+echo "================================================================================"
+corArgsTest --usMin 65536
+echo
+echo
+
+
+echo "05. Too low value for an unsigned short (-1) using --usMax"
+echo "================================================================================"
+corArgsTest --usMax -1
+echo
+echo
+
+
+echo "06. Too low value for sMin (-6)"
+echo "================================================================================"
+corArgsTest --sMin -6
+echo
+echo
+
+
+echo "07. Too high value for sMax (11)"
+echo "================================================================================"
+corArgsTest --sMax 11
+echo
+echo
+
+
+echo "08. Too low value for sMinMax (-6)"
+echo "================================================================================"
+corArgsTest --sMinMax -6
+echo
+echo
+
+
+echo "09. Too high value for sMinMax (11)"
+echo "================================================================================"
+corArgsTest --sMinMax 11
+echo
+echo
+
+
+echo "10. Too low value for usMin (4)"
+echo "================================================================================"
+corArgsTest --usMin 4
+echo
+echo
+
+
+echo "11. Too high value for usMax (11)"
+echo "================================================================================"
+corArgsTest --usMax 11
+echo
+echo
+
+
+echo "12. Too low value for usMinMax (4)"
+echo "================================================================================"
+corArgsTest --usMinMax 4
+echo
+echo
+
+
+echo "13. Too high value for usMinMax (11)"
+echo "================================================================================"
+corArgsTest --usMinMax 11
+echo
+echo
+
+
+echo "14. Hexadecimal value --shortVal 0x10, see shortVal == 16"
+echo "================================================================================"
+corArgsTest --shortVal 0x10
+echo
+echo
+
+
+echo "15. Hexadecimal value --shortVal H'11, see shortVal == 17"
+echo "================================================================================"
+corArgsTest --shortVal "H'11"
+echo
+echo
+
+
+echo "16. Hexadecimal value --shortVal h'12, see shortVal == 18"
+echo "================================================================================"
+corArgsTest --shortVal "h'12"
+echo
+echo
+
+
+echo "17. Octadecimal value --shortVal O'23, see shortVal == 19"
+echo "================================================================================"
+corArgsTest --shortVal "O'23"
+echo
+echo
+
+
+echo "18. Octadecimal value --shortVal o'24, see shortVal == 20"
+echo "================================================================================"
+corArgsTest --shortVal "o'24"
+echo
+echo
+
+
+echo "19. Binary value --shortVal B'10101, see shortVal == 21"
+echo "================================================================================"
+corArgsTest --shortVal "B'10101"
+echo
+echo

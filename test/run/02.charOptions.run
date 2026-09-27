@@ -1,0 +1,175 @@
+#
+# Args to use in test:
+#
+#   Option       Type      DEF   MIN        MAX
+#   -----------  --------  ---   ---        ---
+#   --cMin:      CorArgChar    1     -5       - NO-LIMIT
+#   --cMax:      CorArgChar    1     NO-LIMIT - 10
+#   --cMinMax:   CorArgChar    1     -5       - 10
+#   --ucMin:     CorArgUChar   5      5       - NO-LIMIT
+#   --ucMax:     CorArgUChar   5     NO-LIMIT - 10
+#   --ucMinMax:  CorArgUChar   5      5       - 10
+#
+# Test Cases:
+#   01. Set valid values for all six options (all on limits):
+#       cMin:     -5
+#       cMax:     10
+#       cMinMax:  -5
+#       ucMin:     5
+#       ucMax:    10
+#       ucMinMax:  5
+#
+#   02. Too high value for a signed char (128) using --cMin
+#   03. Too low value for a signed char (-129) using --cMax
+#   04. Too high value for an unsigned char (257) using --ucMin
+#   05. Too low value for an unsigned char (-1) using --ucMax
+#
+#   06. Too low value for cMin (-6)
+#   07. Too high value for cMax (11)
+#   08. Too low value for cMinMax (-6)
+#   09. Too high value for cMinMax (11)
+#
+#   10. Too low value for ucMin (4)
+#   11. Too high value for ucMax (11)
+#   12. Too low value for ucMinMax (4)
+#   13. Too high value for ucMinMax (11)
+#
+#   14. Hexadecimal value --charVal 0x10,    see charVal == 16
+#   15. Hexadecimal value --charVal H'11,    see charVal == 17
+#   16. Hexadecimal value --charVal h'12,    see charVal == 18
+#   17. Octadecimal value --charVal O'102,   see charVal == 19
+#   18. Octadecimal value --charVal o'24,    see charVal == 20
+#   19. Binary      value --charVal B'10011, see charVal == 21
+#
+
+echo "01. Set valid values for all six options (all on limits)"
+echo "================================================================================"
+corArgsTest --cMin -5 --cMax 10 --cMinMax -5 --ucMin 5 --ucMax 10 --ucMinMax 5
+echo
+echo
+
+
+echo "02. Too high value for a signed char (128) using --cMin"
+echo "================================================================================"
+corArgsTest --cMin 128
+echo
+echo
+
+
+echo "03. Too low value for a signed char (-129) using --cMax"
+echo "================================================================================"
+corArgsTest --cMax -129
+echo
+echo
+
+
+echo "04. Too high value for an unsigned char (257) using --ucMin"
+echo "================================================================================"
+corArgsTest --ucMin 257
+echo
+echo
+
+
+echo "05. Too low value for an unsigned char (-1) using --ucMax"
+echo "================================================================================"
+corArgsTest --ucMax -1
+echo
+echo
+
+
+echo "06. Too low value for cMin (-6)"
+echo "================================================================================"
+corArgsTest --cMin -6
+echo
+echo
+
+
+echo "07. Too high value for cMax (11)"
+echo "================================================================================"
+corArgsTest --cMax 11
+echo
+echo
+
+
+echo "08. Too low value for cMinMax (-6)"
+echo "================================================================================"
+corArgsTest --cMinMax -6
+echo
+echo
+
+
+echo "09. Too high value for cMinMax (11)"
+echo "================================================================================"
+corArgsTest --cMinMax 11
+echo
+echo
+
+
+echo "10. Too low value for ucMin (4)"
+echo "================================================================================"
+corArgsTest --ucMin 4
+echo
+echo
+
+
+echo "11. Too high value for ucMax (11)"
+echo "================================================================================"
+corArgsTest --ucMax 11
+echo
+echo
+
+
+echo "12. Too low value for ucMinMax (4)"
+echo "================================================================================"
+corArgsTest --ucMinMax 4
+echo
+echo
+
+
+echo "13. Too high value for ucMinMax (11)"
+echo "================================================================================"
+corArgsTest --ucMinMax 11
+echo
+echo
+
+
+echo "14. Hexadecimal value --charVal 0x10, see charVal == 16"
+echo "================================================================================"
+corArgsTest --charVal 0x10
+echo
+echo
+
+
+echo "15. Hexadecimal value --charVal H'11, see charVal == 17"
+echo "================================================================================"
+corArgsTest --charVal "H'11"
+echo
+echo
+
+
+echo "16. Hexadecimal value --charVal h'12, see charVal == 18"
+echo "================================================================================"
+corArgsTest --charVal "h'12"
+echo
+echo
+
+
+echo "17. Octadecimal value --charVal O'23, see charVal == 19"
+echo "================================================================================"
+corArgsTest --charVal "O'23"
+echo
+echo
+
+
+echo "18. Octadecimal value --charVal o'24, see charVal == 20"
+echo "================================================================================"
+corArgsTest --charVal "o'24"
+echo
+echo
+
+
+echo "19. Binary value --charVal B'10101, see charVal == 21"
+echo "================================================================================"
+corArgsTest --charVal "B'10101"
+echo
+echo

@@ -1,0 +1,3 @@
+NAME:     usage
+EXPECT:   test/expect/01.usage.expect
+RUN:      test/run/01.usage.run

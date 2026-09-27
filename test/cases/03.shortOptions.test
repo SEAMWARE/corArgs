@@ -1,0 +1,3 @@
+NAME:     Short Options
+EXPECT:   test/expect/03.shortOptions.expect
+RUN:      test/run/03.shortOptions.run
