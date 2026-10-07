@@ -376,12 +376,6 @@ CorArgsStatus limitCheck(CorArgInfo* kargP, long long intValue, unsigned long lo
 //
 static CorArgsStatus optionSet(CorArgInfo* kargP, int argC, char* argV[], int argIx)
 {
-  long long           intValue    = 0;
-  unsigned long long  uintValue   = 0;
-  float               floatValue  = 0;
-  char*               stringValue = NULL;
-  CorArgsStatus       ks;
-
   COR_LIB_V("Setting option '%s', argIx: %d, argC: %d", kargP->longName, argIx, argC);
 
   if ((kargP->type != CorArgBool) && (argIx + 1 >= argC))
@@ -394,14 +388,39 @@ static CorArgsStatus optionSet(CorArgInfo* kargP, int argC, char* argV[], int ar
   {
     *((bool*) kargP->valueP) = true;
     return CorArgsOk;
-  }    
+  }
+
+  return corArgsValueSet(kargP, argV[argIx + 1]);
+}
+
+
+
+// -----------------------------------------------------------------------------
+//
+// corArgsValueSet - a non-bool option's value from its text: parsed, checked against its type's range and
+// the option's own limits, and set - or an error and nothing set. The command line and the environment
+// both come here: a value the command line refuses, the environment refuses too.
+//
+CorArgsStatus corArgsValueSet(CorArgInfo* kargP, const char* valueText)
+{
+  long long           intValue    = 0;
+  unsigned long long  uintValue   = 0;
+  float               floatValue  = 0;
+  char*               stringValue = NULL;
+  CorArgsStatus       ks;
 
   if (kargP->type == CorArgFloat)
   {
     char* endP = NULL;
-    
+
     errno      = 0;
-    floatValue = strtof(argV[argIx + 1], &endP);
+    floatValue = strtof(valueText, &endP);
+
+    if ((endP == valueText) || (*endP != 0))
+    {
+      printf("%s: invalid value '%s' for float option '%s'\n", corArgsProgName, valueText, kargP->longName);
+      return CorArgsInvalidValue;
+    }
 
     if (errno == ERANGE)
     {
@@ -410,7 +429,7 @@ static CorArgsStatus optionSet(CorArgInfo* kargP, int argC, char* argV[], int ar
     }
   }
   else if (kargP->type == CorArgString)
-    stringValue = argV[argIx + 1];
+    stringValue = (char*) valueText;
   else
   {
     int base = 10;
@@ -425,7 +444,7 @@ static CorArgsStatus optionSet(CorArgInfo* kargP, int argC, char* argV[], int ar
     //
     // 0123:   Octadecimal  ?
     //
-    char* valueP = argV[argIx + 1];
+    char* valueP = (char*) valueText;
     char* rest   = NULL;
 
     if ((valueP[0] == '0') && ((valueP[1] == 'x') || (valueP[1] == 'X')))
@@ -459,6 +478,13 @@ static CorArgsStatus optionSet(CorArgInfo* kargP, int argC, char* argV[], int ar
     {
       printf("%s: invalid value (%s) for integer option '%s'\n", corArgsProgName, valueP, kargP->longName);
       return CorArgsOutOfBounds;
+    }
+
+    // Nothing but the number: "abc" or "12x" was 0 or 12, silently
+    if ((rest == valueP) || (*rest != 0))
+    {
+      printf("%s: invalid value '%s' for integer option '%s'\n", corArgsProgName, valueText, kargP->longName);
+      return CorArgsInvalidValue;
     }
 
     if ((ks = minMaxValueCheck(kargP, intValue, uintValue)) != CorArgsOk)

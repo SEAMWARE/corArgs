@@ -23,6 +23,9 @@
 //
 extern CorArgInfo* corArgInfoV;
 
+// corArgsEnvApply - the environment's values for the options from kiV on, checked as the command line's
+extern CorArgsStatus corArgsEnvApply(CorArgInfo* kiV);
+
 
 
 // -----------------------------------------------------------------------------

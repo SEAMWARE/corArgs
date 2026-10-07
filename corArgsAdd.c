@@ -96,5 +96,8 @@ CorArgsStatus corArgsAdd(CorArg* kargV)
     }
   }
 
-  return CorArgsOk;
+  //
+  // The environment's values for them: corArgsInit applied it to the table it had - these were not in it
+  //
+  return corArgsEnvApply(&corArgInfoV[existing]);
 }
