@@ -8,13 +8,16 @@
 //
 // SPDX-License-Identifier: Apache-2.0
 //
-#include <stdlib.h>                    // calloc
+#include <stdio.h>                     // printf
+#include <stdlib.h>                    // calloc, getenv
+#include <strings.h>                   // strcasecmp
 #include <stdbool.h>                   // bool
 #include <string.h>                    // strcmp
 
 #include "corBase/corLibLog.h"         // COR_LIB_*
 #include "corBase/corMacros.h"         // COR_VEC_SIZE
 
+#include "corArgs/corArgsParse.h"     // corArgsValueSet
 #include "corArgs/CorArgsStatus.h"     // CorArgsStatus
 #include "corArgs/CorArgsError.h"      // CORARGS_ERROR_PUSH
 #include "corArgs/CorArg.h"            // CorArg
@@ -689,44 +692,36 @@ static CorArgsStatus defaultValues(CorArgInfo* kiV)
 
 // -----------------------------------------------------------------------------
 //
-// envVarValues -
+// corArgsEnvApply - the environment's values for the options from kiV on (to the CorArgEnd): each checked
+// as the command line's are (corArgsValueSet) - a value out of range or not a number is an error, not a
+// silent 0. corArgsInit runs it for the table it is given, corArgsAdd for the options a plugin adds: they
+// had none, so CORAINE_DBDIR (a plugin's option) did nothing.
 //
-static CorArgsStatus envVarValues(CorArgInfo* kiV)
+CorArgsStatus corArgsEnvApply(CorArgInfo* kiV)
 {
   for (int kargIx = 0; kiV[kargIx].type != CorArgEnd; kargIx++)
   {
-    CorArgInfo* kargP     = &kiV[kargIx];
-    char*     envVarValue = getenv(kargP->envVar);
-    bool      bValue      = false;
+    CorArgInfo* kargP = &kiV[kargIx];
+
+    if ((kargP->type == CorArgSeparator) || (kargP->envVar[0] == 0))
+      continue;
+
+    char* envVarValue = getenv(kargP->envVar);
 
     if (envVarValue == NULL)
       continue;
 
-    unsigned long long iValue = atoi(envVarValue);
-
     if (kargP->type == CorArgBool)
+      *((bool*) kargP->valueP) = (strcasecmp(envVarValue, "TRUE") == 0);
+    else
     {
-      if (strcasecmp(envVarValue, "TRUE") == 0)
-        bValue = true;
-    }
+      CorArgsStatus ks = corArgsValueSet(kargP, envVarValue);
 
-    switch (kargP->type)
-    {
-    case CorArgSeparator: break;   // a section heading has no valueP
-
-    case CorArgBool:  *((bool*)               kargP->valueP) = bValue;                              break;
-    case CorArgString:    *((char**)              kargP->valueP) = (char*) envVarValue;                 break;
-    case CorArgFloat: *((float*)              kargP->valueP) = (float) strtod(envVarValue, NULL);   break;
-    case CorArgInt8:  *((char*)               kargP->valueP) = (char)  iValue;                      break;
-    case CorArgUInt8: *((unsigned char*)      kargP->valueP) = (unsigned char)  iValue;             break;
-    case CorArgInt16: *((short*)              kargP->valueP) = (short) iValue;                      break;
-    case CorArgUInt16:    *((unsigned short*)     kargP->valueP) = (unsigned short) iValue;             break;
-    case CorArgInt32: *((int*)                kargP->valueP) = (int)   iValue;                      break;
-    case CorArgUInt32:    *((unsigned int*)       kargP->valueP) = (unsigned int)   iValue;             break;
-    case CorArgInt64: *((long long*)          kargP->valueP) = (long long)      iValue;             break;
-    case CorArgUInt64:    *((unsigned long long*) kargP->valueP) = (unsigned long long) iValue;         break;
-    case CorArgEnd:
-      break;
+      if (ks != CorArgsOk)
+      {
+        printf("%s: (from the environment variable %s)\n", corArgsProgName, kargP->envVar);
+        return ks;
+      }
     }
 
     kargP->from = CorArgFromEnvVar;
@@ -820,7 +815,7 @@ CorArgsStatus corArgsInit(const char* progName, CorArg* kargV, const char* prefi
   //
   // Set values for env vars
   //
-  ks = envVarValues(corArgInfoV);
+  ks = corArgsEnvApply(corArgInfoV);
   if (ks != CorArgsOk)
   {
     CORARGS_ERROR_PUSH("global", ks, "error in env values");
