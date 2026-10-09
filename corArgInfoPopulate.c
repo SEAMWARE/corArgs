@@ -92,7 +92,14 @@ void corArgInfoPopulate(CorArgInfo* corArgInfoV, CorArg* kargV, bool builtin, in
     if ((optName[0] == '-') && (optName[1] == '-'))
       ++optName;
 
-    while (prefixLen + onIx < (int) sizeof(corArgInfoV[kiIx].envVar))
+    //
+    // The hyphen left becomes the underscore between the prefix and the name ("CORAINE" + "-port" ->
+    // CORAINE_PORT) - unless the prefix brings its own: "C3_" + "port" -> C3_PORT, not C3__PORT
+    //
+    if ((prefixLen > 0) && (corArgsPrefix[prefixLen - 1] == '_') && (optName[0] == '-'))
+      ++optName;
+
+    while (prefixLen + onIx < (int) sizeof(corArgInfoV[kiIx].envVar) - 1)   // room for the terminating zero
     {
       char c = optName[onIx];
 
@@ -108,7 +115,7 @@ void corArgInfoPopulate(CorArgInfo* corArgInfoV, CorArg* kargV, bool builtin, in
         ;  // Keep as is
       else if ((c >= 'a') && (c <= 'z'))
         c = c - ('a' - 'A');
-      else if ((onIx == 0) &&  (corArgsPrefix[0] == 0) && ((c >= '0') && (c <= '9')))
+      else if ((onIx == 0) && (prefixLen == 0) && ((c >= '0') && (c <= '9')))     // corArgsPrefix may be NULL
         c = '_';
       else if (c == '_')
         ;  // OK

@@ -79,7 +79,7 @@ CorArgString    // char*
 CorArgsStatus corArgsInit(const char* progName, CorArg* kargV, const char* prefix);
 ```
 
-Initializes the parser with option definitions. `prefix` is used for environment variables (e.g., "MYAPP_" makes `--port` settable via `MYAPP_PORT`).
+Initializes the parser with option definitions, and sets the options found in the environment. `prefix` is used for environment variables: "MYAPP" and "MYAPP_" both make `--port` settable via `MYAPP_PORT` (`--no-browser`: `MYAPP_NO_BROWSER`). The name is the option's long name (its short name if it has none), upper-cased, with every character other than a letter, a digit or `_` turned into `_`. `--usage` and `--Usage` have none. The command line wins over the environment.
 
 #### corArgsParse
 
@@ -129,6 +129,7 @@ Access via: `corArgsBuiltinUsage`, `corArgsBuiltinVerbose`, `corArgsBuiltinDebug
 make          # Build library
 make clean    # Remove build artifacts
 make install  # Build (nothing to copy: consumers use -I.. and link from this checkout)
+make envTest  # options set through the environment
 ```
 
 ## Usage Example
