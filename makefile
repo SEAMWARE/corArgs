@@ -52,6 +52,17 @@ TEST          = $(OBJDIR)/corArgsTest
 TEST_LIBS     = ../corBase/libcorBase.a
 
 #
+# envTest - options set through the environment (test/envTest.c), with the prefix given with and
+# without its trailing underscore; built and run
+#
+envTest: $(OBJDIR)/$(LIB)
+	$(CC) $(CFLAGS) -o $(OBJDIR)/envTest test/envTest.c $(OBJDIR)/$(LIB) $(TEST_LIBS) -lpthread
+	$(OBJDIR)/envTest ENVTEST_
+	$(OBJDIR)/envTest ENVTEST
+
+.PHONY: envTest
+
+#
 # The archive and the shared library are built PER FLAVOUR, in $(OBJDIR), and then STAGED to the repo
 # root, where every consumer links them (../corArgs/libcorArgs.a). Unconditionally, on every build:
 # built in place, a debug archive is newer than obj/release/*.o, so `make BUILD=release` after a debug
