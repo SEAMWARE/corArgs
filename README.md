@@ -112,6 +112,16 @@ char* corArgsPeek(int argC, char* argV[], CorArg* kargV, char* optName);
 
 Inspects arguments without full initialization. Useful for early checks.
 
+#### corArgsSecret
+
+```c
+bool corArgsSecret(const char* longName);
+```
+
+Marks an option, after it is declared (`corArgsInit`, `corArgsAdd`), as one whose value is never shown - a
+password, a URI that may hold credentials: `CorArgInfo.secret`. A tool listing the options from
+`corArgInfoV` (coraine's `GET /admin/config`) masks it. `false`: no such option.
+
 ### Built-in Options
 
 | Option | Short | Description |

@@ -34,6 +34,7 @@ typedef struct CorArgInfo
   void*          min;            // lower limit
   void*          max;            // upper limit
   char*          description;    // textual description for usage
+  bool           secret;         // never shown - corArgsSecret()
 
   bool           builtin;
   bool           disabled;

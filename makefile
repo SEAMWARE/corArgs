@@ -35,6 +35,7 @@ LIB_SOURCES   = corArgsConfig.c      \
                 corArgsBuiltins.c    \
                 corArgsInit.c        \
                 corArgsAdd.c         \
+                corArgsSecret.c      \
                 CorArgsError.c       \
                 corArgsStatus.c      \
                 corArgsVersion.c
@@ -43,6 +44,12 @@ BUILD        ?= debug
 OBJDIR        = obj/$(BUILD)
 OBJECTS       = $(LIB_SOURCES:%.c=$(OBJDIR)/%.o)
 DEPS          = $(OBJECTS:.o=.d) $(OBJDIR)/corArgsTest.d
+
+#
+# A bare `make` is `all` - the build and its staging to the repo root - not the first target in the file
+# (envTest, below, ran alone and staged nothing: the root's libcorArgs.a stayed as it was)
+#
+.DEFAULT_GOAL := all
 
 #
 # corArgsTest - a smoke test of the library, built with it so it can never rot.
