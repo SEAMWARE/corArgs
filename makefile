@@ -46,6 +46,12 @@ OBJECTS       = $(LIB_SOURCES:%.c=$(OBJDIR)/%.o)
 DEPS          = $(OBJECTS:.o=.d) $(OBJDIR)/corArgsTest.d
 
 #
+# A bare `make` is `all` - the build and its staging to the repo root - not the first target in the file
+# (envTest, below, ran alone and staged nothing: the root's libcorArgs.a stayed as it was)
+#
+.DEFAULT_GOAL := all
+
+#
 # corArgsTest - a smoke test of the library, built with it so it can never rot.
 # It stays in obj/: it is not a tool, and nothing installs it.
 #
