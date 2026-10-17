@@ -35,6 +35,7 @@ LIB_SOURCES   = corArgsConfig.c      \
                 corArgsBuiltins.c    \
                 corArgsInit.c        \
                 corArgsAdd.c         \
+                corArgsSecret.c      \
                 CorArgsError.c       \
                 corArgsStatus.c      \
                 corArgsVersion.c
