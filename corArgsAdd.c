@@ -9,6 +9,7 @@
 // SPDX-License-Identifier: Apache-2.0
 //
 #include <stdlib.h>                    // realloc
+#include <string.h>                    // memset
 #include <stdbool.h>                   // bool
 
 
@@ -61,6 +62,12 @@ CorArgsStatus corArgsAdd(CorArg* kargV)
   }
 
   corArgInfoV = newV;
+
+  //
+  // The new entries zeroed, as corArgsInit's calloc gives them: corArgInfoPopulate sets the fields it
+  // copies from kargV, not 'secret', and of a separator only its type and description
+  //
+  memset(&corArgInfoV[existing], 0, (total - existing) * sizeof(CorArgInfo));
 
   // Populate the new entries starting at 'existing'
   int ix = existing;
