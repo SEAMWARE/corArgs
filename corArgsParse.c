@@ -53,7 +53,8 @@
 #include "corArgs/corArgsInit.h"       // corArgInfoV
 #include "corArgs/corArgsConfig.h"     // Config vars
 #include "corArgs/corArgsUsage.h"      // corArgsUsage
-#include "corArgs/corArgsBuiltins.h"   // corArgsBuiltins
+#include "corArgs/corArgsBuiltins.h"   // corArgsBuiltins, corArgsBuiltinUsage, corArgsBuiltinExtUsage
+#include "corArgs/corArgInfoPopulate.h"  // corArgsActionOption
 #include "corArgs/CorArgsError.h"      // CORARGS_ERROR_PUSH
 #include "corArgs/corArgsParse.h"      // Own interface
 
@@ -539,12 +540,138 @@ static CorArgsStatus envVarValues(CorArgInfo* kiV)
 
 // -----------------------------------------------------------------------------
 //
+// usageAsked - does the command line ask for the usage (--usage/-u) or the extended usage (--Usage/-U)?
+//
+// Looked for BEFORE any option is set: the usage is what such a command line is for, and a bad value of
+// another option (`-u -p 0`) used to stop the parse with that option's error, the usage never printed.
+// The arguments are walked as the parse walks them - an option that takes a value consumes the next
+// one, so `--name -u` is a name, not a request for the usage - and a group of bool options (-vu) counts.
+//
+static void usageAsked(int argC, char* argV[], bool* usageP, bool* extUsageP)
+{
+  *usageP    = false;
+  *extUsageP = false;
+
+  for (int argIx = 1; argIx < argC; argIx++)
+  {
+    CorArgInfo* infoP = NULL;
+
+    for (int kargIx = 0; corArgInfoV[kargIx].type != CorArgEnd; kargIx++)
+    {
+      CorArgInfo* iP = &corArgInfoV[kargIx];
+
+      if (iP->type == CorArgSeparator)
+        continue;
+
+      if (((iP->shortName != NULL) && (strcmp(argV[argIx], iP->shortName) == 0)) || ((iP->longName != NULL) && (strcmp(argV[argIx], iP->longName) == 0)))
+      {
+        infoP = iP;
+        break;
+      }
+    }
+
+    if (infoP != NULL)
+    {
+      if      (infoP->valueP == &corArgsBuiltinUsage)    *usageP    = true;
+      else if (infoP->valueP == &corArgsBuiltinExtUsage) *extUsageP = true;
+      else if (infoP->type != CorArgBool)                ++argIx;   // its value
+
+      continue;
+    }
+
+    //
+    // A group of bool options, "-vu": every char one, as the parse below requires
+    //
+    if ((argV[argIx][0] == '-') && (argV[argIx][1] != 0))
+    {
+      bool allBool = true;
+
+      for (char* cP = &argV[argIx][1]; *cP != 0; cP++)
+      {
+        if (isBoolOpt(*cP, corArgInfoV) == false)
+        {
+          allBool = false;
+          break;
+        }
+      }
+
+      if (allBool == true)
+      {
+        if (strchr(&argV[argIx][1], 'u') != NULL) *usageP    = true;
+        if (strchr(&argV[argIx][1], 'U') != NULL) *extUsageP = true;
+      }
+    }
+  }
+}
+
+
+
+// -----------------------------------------------------------------------------
+//
+// requiredCheck - every required option (CorArgReq) set, on the command line or in the environment
+//
+// The sort was there from the start and shown by the usage (no [brackets]), but nothing enforced it: a
+// program started without one ran on with the option's default - NULL for a string - and coraine-import
+// without --file crashed in fopen. The first one missing is named, the usage follows, exit 1 - as an
+// unrecognized option. An action option (--usage, --version) is never required: it is the alternative
+// to running.
+//
+static void requiredCheck(void)
+{
+  for (int kargIx = 0; corArgInfoV[kargIx].type != CorArgEnd; kargIx++)
+  {
+    CorArgInfo* infoP = &corArgInfoV[kargIx];
+
+    if ((infoP->type == CorArgSeparator) || (infoP->sort != CorArgReq) || (infoP->disabled == true))
+      continue;
+
+    if (corArgsActionOption(infoP->longName) == true)
+      continue;
+
+    if (infoP->from != CorArgFromDefaultValue)
+      continue;
+
+    const char* name = ((infoP->longName != NULL) && (infoP->longName[0] != 0)) ? infoP->longName : infoP->shortName;
+
+    printf("%s: missing required option: %s\n", corArgsProgName, name);
+    corArgsUsage();
+    exit(1);
+  }
+}
+
+
+
+// -----------------------------------------------------------------------------
+//
 // corArgsParse -
 //
 CorArgsStatus corArgsParse(int argC, char* argV[])
 {
   int          argIx = 1;
   CorArgsStatus  ks    = CorArgsOk;
+
+  //
+  // The usage first, whatever else the command line holds - see usageAsked
+  //
+  if (corArgsExitOnUsage == true)
+  {
+    bool usage;
+    bool extUsage;
+
+    usageAsked(argC, argV, &usage, &extUsage);
+
+    if (usage == true)
+    {
+      corArgsUsage();
+      exit(corArgsExitOnUsageExitCode);
+    }
+
+    if (extUsage == true)
+    {
+      corArgsExtUsage();
+      exit(corArgsExitOnUsageExitCode);
+    }
+  }
 
   //
   // Set values from config file
@@ -686,6 +813,8 @@ CorArgsStatus corArgsParse(int argC, char* argV[])
     if (corArgsExitOnUsage == true)
       exit(corArgsExitOnUsageExitCode);
   }
+
+  requiredCheck();
 
   return CorArgsOk;
 }

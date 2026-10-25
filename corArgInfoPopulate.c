@@ -21,6 +21,21 @@
 
 // -----------------------------------------------------------------------------
 //
+// corArgsActionOption - is longName an action option: one that does something and exits (--usage,
+// --Usage, --version) instead of setting a value the program then runs with
+//
+bool corArgsActionOption(const char* longName)
+{
+  if (longName == NULL)
+    return false;
+
+  return (strcmp(longName, "--usage") == 0) || (strcmp(longName, "--Usage") == 0) || (strcmp(longName, "--version") == 0);
+}
+
+
+
+// -----------------------------------------------------------------------------
+//
 // corArgInfoPopulate - populate the CorArgInfo vector
 //
 void corArgInfoPopulate(CorArgInfo* corArgInfoV, CorArg* kargV, bool builtin, int* ixP)
@@ -59,18 +74,12 @@ void corArgInfoPopulate(CorArgInfo* corArgInfoV, CorArg* kargV, bool builtin, in
     //
     // Build env var from longName and corArgsPrefix
     //
-    // Builtin --usage and --Usage have no env var
+    // An ACTION option has no env var - not listed by --Usage, not read: --usage and --Usage (the
+    // builtins) and --version (a program's own, answered before corArgsInit from the command line
+    // alone). They do something and exit; a variable left in the environment would make every start
+    // of the program do it instead of what it was started for.
     //
-    if ((corArgInfoV[kiIx].longName != NULL) && (strcmp(corArgInfoV[kiIx].longName, "--usage") == 0))
-    {
-      corArgInfoV[kiIx].envVar[0] = 0;
-
-      ++ix;
-      ++kiIx;
-
-      continue;
-    }
-    if ((corArgInfoV[kiIx].longName != NULL) && (strcmp(corArgInfoV[kiIx].longName, "--Usage") == 0))
+    if (corArgsActionOption(corArgInfoV[kiIx].longName) == true)
     {
       corArgInfoV[kiIx].envVar[0] = 0;
 

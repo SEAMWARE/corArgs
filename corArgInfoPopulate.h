@@ -18,6 +18,14 @@
 
 // -----------------------------------------------------------------------------
 //
+// corArgsActionOption - --usage, --Usage, --version: no env var, not required (see the .c)
+//
+extern bool corArgsActionOption(const char* longName);
+
+
+
+// -----------------------------------------------------------------------------
+//
 // corArgInfoPopulate - populate the CorArgInfo vector
 //
 extern void corArgInfoPopulate(CorArgInfo* corArgInfoV, CorArg* kargV, bool builtin, int* ixP);

@@ -67,7 +67,15 @@ envTest: $(OBJDIR)/$(LIB)
 	$(OBJDIR)/envTest ENVTEST_
 	$(OBJDIR)/envTest ENVTEST
 
-.PHONY: envTest
+#
+# parseTest - corArgsParse on a required option, -u/-U beside a bad value and the action options' (non-)
+# environment variables (test/parseTest.c, run by test/parseTest.sh with each command line)
+#
+parseTest: $(OBJDIR)/$(LIB)
+	$(CC) $(CFLAGS) -o $(OBJDIR)/parseTest test/parseTest.c $(OBJDIR)/$(LIB) $(TEST_LIBS) -lpthread
+	test/parseTest.sh $(OBJDIR)/parseTest
+
+.PHONY: envTest parseTest
 
 #
 # The archive and the shared library are built PER FLAVOUR, in $(OBJDIR), and then STAGED to the repo

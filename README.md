@@ -79,7 +79,7 @@ CorArgString    // char*
 CorArgsStatus corArgsInit(const char* progName, CorArg* kargV, const char* prefix);
 ```
 
-Initializes the parser with option definitions, and sets the options found in the environment. `prefix` is used for environment variables: "MYAPP" and "MYAPP_" both make `--port` settable via `MYAPP_PORT` (`--no-browser`: `MYAPP_NO_BROWSER`). The name is the option's long name (its short name if it has none), upper-cased, with every character other than a letter, a digit or `_` turned into `_`. `--usage` and `--Usage` have none. The command line wins over the environment.
+Initializes the parser with option definitions, and sets the options found in the environment. `prefix` is used for environment variables: "MYAPP" and "MYAPP_" both make `--port` settable via `MYAPP_PORT` (`--no-browser`: `MYAPP_NO_BROWSER`). The name is the option's long name (its short name if it has none), upper-cased, with every character other than a letter, a digit or `_` turned into `_`. The action options - `--usage`, `--Usage` and a program's own `--version` - have none: not listed by `--Usage`, not read. The command line wins over the environment.
 
 #### corArgsParse
 
@@ -88,6 +88,9 @@ CorArgsStatus corArgsParse(int argC, char* argV[]);
 ```
 
 Parses command-line arguments and populates variables.
+
+- `--usage`/`-u` or `--Usage`/`-U` anywhere on the command line prints that list and exits (`corArgsConfig` sets the exit code, or not to exit) - before any other option is set, so a bad value of another option (`-u -p 0`) does not stop it.
+- A required option (`CorArgReq`) set neither on the command line nor in the environment: `<prog>: missing required option: <name>`, the usage, exit 1. An action option is never required.
 
 #### corArgsUsage / corArgsExtUsage
 
@@ -140,6 +143,7 @@ make          # Build library
 make clean    # Remove build artifacts
 make install  # Build (nothing to copy: consumers use -I.. and link from this checkout)
 make envTest  # options set through the environment
+make parseTest  # a required option, -u/-U beside a bad value, the action options' environment variables
 ```
 
 ## Usage Example
