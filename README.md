@@ -127,7 +127,7 @@ password, a URI that may hold credentials: `CorArgInfo.secret`. A tool listing t
 | Option | Short | Description |
 |--------|-------|-------------|
 | `--usage` | `-u` | Display standard usage |
-| `--Usage` | `-U` | Display extended usage |
+| `--Usage` | `-U` | Display extended usage: one row per option - long and short name, environment variable, sort, type and default value (`-` for none; a secret option's is not shown) |
 | `--verbose` | `-v` | Enable verbose mode |
 | `--debug` | `-d` | Enable debug mode |
 
