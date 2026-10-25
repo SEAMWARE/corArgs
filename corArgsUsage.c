@@ -240,20 +240,35 @@ static char* sortName(CorArgSort sort)
 
 // -----------------------------------------------------------------------------
 //
-// fromName - 
+// defaultValue - an option's default as text, into buf: the value the option has when nothing sets it
 //
-static char* fromName(CorArgValueFrom from)
+// The default is stored in the pointer itself (CorArg's 'def', cast as corArgsAdd and corArgsInit
+// read it), a string's is the string - none is "-", an empty one "". A secret option's is not shown.
+//
+static const char* defaultValue(CorArgInfo* infoP, char* buf, int bufSize)
 {
-  switch (from)
+  void* def = infoP->def;
+
+  if (infoP->secret == true)
+    return (def != NULL)? "(secret)" : "-";
+
+  switch (infoP->type)
   {
-  case CorArgFromDefaultValue: return "Default Value";
-  case CorArgFromConfigFile:   return "Config File";
-  case CorArgFromEnvVar: return "Env Var";
-  case CorArgFromShortOption:  return "Short Option";
-  case CorArgFromLongOption:   return "Long Option";
+  case CorArgBool:   return ((bool) (long long) def == true)? "true" : "false";
+  case CorArgString: return (def == NULL)? "-" : (((char*) def)[0] == 0)? "\"\"" : (const char*) def;
+  case CorArgFloat:  snprintf(buf, bufSize, "%g",   (double) (float) (long long) def);                  break;
+  case CorArgChar:   snprintf(buf, bufSize, "%d",   (int) (char) (long long) def);                      break;
+  case CorArgUChar:  snprintf(buf, bufSize, "%u",   (unsigned int) (unsigned char) (long long) def);    break;
+  case CorArgShort:  snprintf(buf, bufSize, "%d",   (int) (short) (long long) def);                     break;
+  case CorArgUShort: snprintf(buf, bufSize, "%u",   (unsigned int) (unsigned short) (long long) def);   break;
+  case CorArgInt:    snprintf(buf, bufSize, "%d",   (int) (long long) def);                             break;
+  case CorArgUInt:   snprintf(buf, bufSize, "%u",   (unsigned int) (long long) def);                    break;
+  case CorArgLong:   snprintf(buf, bufSize, "%lld", (long long) def);                                   break;
+  case CorArgULong:  snprintf(buf, bufSize, "%llu", (unsigned long long) def);                          break;
+  default:           return "-";
   }
 
-  return "No From";
+  return buf;
 }
 
 
@@ -264,7 +279,7 @@ static char* fromName(CorArgValueFrom from)
 //
 // Usage: corArgsTest  [--usage/-u (usage)]
 //
-// Long-Name Short-Name EnvVar  Type  Sort  From   Value  Def-Val  Min-Val  Max-Val  Is-Builtin Is-Disabled
+// One row per option: long name, short name, environment variable, sort, type and default value
 //
 void corArgsExtUsage(void)
 {
@@ -290,7 +305,6 @@ void corArgsExtUsage(void)
     char  format[32];
     char* sort = sortName(corArgInfoV[ix].sort);
     char* type = typeName(corArgInfoV[ix].type);
-    char* from = fromName(corArgInfoV[ix].from);
 
     // A separator carries no option, only a heading for the plain usage
     // listing — there are no columns to fill in here.
@@ -338,10 +352,9 @@ void corArgsExtUsage(void)
     // Type
     printf(" %-8s", type);
 
-    // From
-    printf(" %-14s ", from);
-
-    printf("\n");
+    // Default value - the last column, not padded
+    char defBuf[64];
+    printf(" %s\n", defaultValue(&corArgInfoV[ix], defBuf, sizeof(defBuf)));
 
     ++ix;
   }
