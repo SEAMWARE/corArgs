@@ -84,7 +84,22 @@
 
 // -----------------------------------------------------------------------------
 //
-// isBoolOpt -
+// oneLetterBool - a Bool option whose short name is '-<letter>', that letter alone - one of the switches a
+// group like -Vu is made of. A short name that only BEGINS with the letter (-db) is another option, and
+// one that is not a Bool takes a value, which a group has no room for
+//
+static bool oneLetterBool(CorArgInfo* aP, char letter)
+{
+  const char* s = aP->shortName;
+
+  return (aP->type == CorArgBool) && (s != NULL) && (s[0] == '-') && (s[1] == letter) && (s[2] == 0);
+}
+
+
+
+// -----------------------------------------------------------------------------
+//
+// isBoolOpt - is there a Bool option whose short name is '-<shortName>'?
 //
 static bool isBoolOpt(char shortName, CorArgInfo* kargV)
 {
@@ -92,7 +107,7 @@ static bool isBoolOpt(char shortName, CorArgInfo* kargV)
 
   while (kargV[argIx].type != CorArgEnd)
   {
-    if ((kargV[argIx].shortName != NULL) && (kargV[argIx].shortName[0] == '-') && (shortName == kargV[argIx].shortName[1]))
+    if (oneLetterBool(&kargV[argIx], shortName) == true)
       return true;
 
     ++argIx;
@@ -113,7 +128,7 @@ static void boolOptSet(char shortName, CorArgInfo* kiV)
 
   while (kiV[argIx].type != CorArgEnd)
   {
-    if ((kiV[argIx].shortName != NULL) && (kiV[argIx].shortName[0] == '-') && (shortName == kiV[argIx].shortName[1]))
+    if (oneLetterBool(&kiV[argIx], shortName) == true)
     {
       *((bool*) kiV[argIx].valueP) = true;
       kiV[argIx].from = CorArgFromShortOption;
