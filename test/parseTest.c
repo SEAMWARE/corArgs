@@ -27,6 +27,7 @@ static char*          name;
 static unsigned short port;
 static bool           version;
 static char*          dir;
+static bool           quiet;
 
 static CorArg options[] =
 {
@@ -34,6 +35,7 @@ static CorArg options[] =
   { "--port",    "-p", CorArgUShort, &port,    CorArgOpt, (void*) 7900,  (void*) 1, (void*) 65535, "port" },
   { "--version", "-V", CorArgBool,   &version, CorArgOpt, (void*) false, NULL,      NULL,          "print version and exit" },
   { "--dir",     "-dir", CorArgString, &dir,   CorArgOpt, NULL,          NULL,      NULL,          "a directory" },
+  { "--quiet",   "-q", CorArgBool,   &quiet,   CorArgOpt, (void*) false, NULL,      NULL,          "say less" },
   CORARGS_END
 };
 
@@ -57,5 +59,7 @@ int main(int argC, char* argV[])
   printf("OK name %s port %u version %s\n", (name != NULL) ? name : "(null)", port, version ? "true" : "false");
   if (dir != NULL)
     printf("dir %s\n", dir);
+  if (quiet == true)
+    printf("quiet\n");
   return 0;
 }

@@ -10,18 +10,17 @@
 //
 #include <stdio.h>                     // printf
 #include <stdlib.h>                    // calloc, getenv
-#include <strings.h>                   // strcasecmp
 #include <stdbool.h>                   // bool
 #include <string.h>                    // strcmp
 
 #include "corBase/corLibLog.h"         // COR_LIB_*
 #include "corBase/corMacros.h"         // COR_VEC_SIZE
 
-#include "corArgs/corArgsParse.h"     // corArgsValueSet
+#include "corArgs/corArgsParse.h"     // corArgsValueSet, corArgsSay
 #include "corArgs/CorArgsStatus.h"     // CorArgsStatus
 #include "corArgs/CorArgsError.h"      // CORARGS_ERROR_PUSH
 #include "corArgs/CorArg.h"            // CorArg
-#include "corArgs/corArgsGlobals.h"    // corArgsProgName
+#include "corArgs/corArgsGlobals.h"    // corArgsProgName, corArgsEnvStatus, corArgsEnvReading
 #include "corArgs/corArgsBuiltins.h"   // corArgsBuiltins
 #include "corArgs/corArgsConfig.h"     // Config vars
 #include "corArgs/corArgInfoPopulate.h"    // corArgInfoPopulate
@@ -692,13 +691,44 @@ static CorArgsStatus defaultValues(CorArgInfo* kiV)
 
 // -----------------------------------------------------------------------------
 //
+// envBool - the value of a Bool option's environment variable: 1 (on), 0 (off), -1 (neither). Each word in
+// three spellings only - all lowercase, all capitals, capitalised. Any other value is an error, never off: a
+// CORAINE_X=yes that turned X off without a word is what this is for
+//
+static int envBool(const char* value)
+{
+  const char* on[]  = { "true",  "True",  "TRUE",  "on",  "On",  "ON"  };
+  const char* off[] = { "false", "False", "FALSE", "off", "Off", "OFF" };
+
+  for (unsigned int ix = 0; ix < COR_VEC_SIZE(on); ix++)
+  {
+    if (strcmp(value, on[ix])  == 0)  return 1;
+    if (strcmp(value, off[ix]) == 0)  return 0;
+  }
+
+  return -1;
+}
+
+
+
+// -----------------------------------------------------------------------------
+//
 // corArgsEnvApply - the environment's values for the options from kiV on (to the CorArgEnd): each checked
 // as the command line's are (corArgsValueSet) - a value out of range or not a number is an error, not a
 // silent 0. corArgsInit runs it for the table it is given, corArgsAdd for the options a plugin adds: they
 // had none, so CORAINE_DBDIR (a plugin's option) did nothing.
 //
+// The first value refused is NOT said here: it is kept (corArgsEnvError, corArgsEnvStatus) and said by
+// corArgsParse after its -u/-U check - `CORAINE_PORT=0 coraine -u` prints the usage. The values after it
+// are not read: one error is the one said.
+//
 CorArgsStatus corArgsEnvApply(CorArgInfo* kiV)
 {
+  if (corArgsEnvStatus != CorArgsOk)
+    return CorArgsOk;
+
+  corArgsEnvReading = true;
+
   for (int kargIx = 0; kiV[kargIx].type != CorArgEnd; kargIx++)
   {
     CorArgInfo* kargP = &kiV[kargIx];
@@ -712,21 +742,34 @@ CorArgsStatus corArgsEnvApply(CorArgInfo* kiV)
       continue;
 
     if (kargP->type == CorArgBool)
-      *((bool*) kargP->valueP) = (strcasecmp(envVarValue, "TRUE") == 0);
+    {
+      int b = envBool(envVarValue);
+
+      if (b == -1)
+      {
+        corArgsSay("%s: %s=%s: not a Bool - on: true, True, TRUE, on, On, ON; off: false, False, FALSE, off, Off, OFF\n", corArgsProgName, kargP->envVar, envVarValue);
+        corArgsEnvStatus = CorArgsInvalidValue;
+        break;
+      }
+
+      *((bool*) kargP->valueP) = (b == 1);
+    }
     else
     {
       CorArgsStatus ks = corArgsValueSet(kargP, envVarValue);
 
       if (ks != CorArgsOk)
       {
-        printf("%s: (from the environment variable %s)\n", corArgsProgName, kargP->envVar);
-        return ks;
+        corArgsSay("%s: (from the environment variable %s)\n", corArgsProgName, kargP->envVar);
+        corArgsEnvStatus = ks;
+        break;
       }
     }
 
     kargP->from = CorArgFromEnvVar;
   }
 
+  corArgsEnvReading = false;
   return CorArgsOk;
 }
 

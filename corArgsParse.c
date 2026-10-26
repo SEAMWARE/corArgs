@@ -34,7 +34,8 @@
 //   - if 'option X' is set 'option Y' MUST ALSO be set: corArgsConfig((CorArgsPair, "-f", "-y")
 // - logrotate, different ways
 //
-#include <stdio.h>                     // printf
+#include <stdio.h>                     // printf, vprintf, vsnprintf
+#include <stdarg.h>                    // va_list, va_start, va_end
 #include <stdlib.h>                    // exit, strtoll
 #include <errno.h>                     // errno
 #include <string.h>                    // strcmp, strdup
@@ -44,7 +45,7 @@
 #include "corBase/corLibLog.h"         // COR_LIB_*
 #include "corBase/corStringSort.h"     // corStringSort
 
-#include "corArgs/corArgsGlobals.h"    // corArgsProgName, etc
+#include "corArgs/corArgsGlobals.h"    // corArgsProgName, corArgsEnvError, corArgsEnvStatus, corArgsEnvReading
 #include "corArgs/CorArgsStatus.h"     // CorArgsStatus
 #include "corArgs/CorArgInfo.h"        // CorArgInfo
 #include "corArgs/CorArgType.h"        // CorArgType, CorArgValueFrom
@@ -144,6 +145,30 @@ static void boolOptSet(char shortName, CorArgInfo* kiV)
 
 // -----------------------------------------------------------------------------
 //
+// corArgsSay - a value's error, to stdout - or, while the environment is being read (corArgsEnvReading), into
+// corArgsEnvError, for corArgsParse to say after its -u/-U check
+//
+void corArgsSay(const char* format, ...)
+{
+  va_list ap;
+
+  va_start(ap, format);
+
+  if (corArgsEnvReading == true)
+  {
+    size_t len = strlen(corArgsEnvError);
+    vsnprintf(&corArgsEnvError[len], sizeof(corArgsEnvError) - len, format, ap);
+  }
+  else
+    vprintf(format, ap);
+
+  va_end(ap);
+}
+
+
+
+// -----------------------------------------------------------------------------
+//
 // minMaxValueCheck -
 //
 // Checking max/min values depending of type of argument
@@ -159,32 +184,32 @@ static CorArgsStatus minMaxValueCheck(CorArgInfo* kargP, long long intValue, uns
   (void) uintValue;  // the unsigned types are range-checked through intValue
   if ((kargP->type == CorArgInt8) && ((intValue < MIN_CHAR) || (intValue > MAX_CHAR)))
   {
-    printf("%s: value %lld out of range for an int8 option (%s)\n", corArgsProgName, intValue, kargP->longName);
+    corArgsSay("%s: value %lld out of range for an int8 option (%s)\n", corArgsProgName, intValue, kargP->longName);
     return CorArgsOutOfBounds;
   }
   else if ((kargP->type == CorArgInt16) && ((intValue < MIN_SHORT) || (intValue > MAX_SHORT)))
   {
-    printf("%s: value %lld out of range for an int16 option (%s)\n", corArgsProgName, intValue, kargP->longName);
+    corArgsSay("%s: value %lld out of range for an int16 option (%s)\n", corArgsProgName, intValue, kargP->longName);
     return CorArgsOutOfBounds;
   }
   else if ((kargP->type == CorArgInt32) && ((intValue < MIN_INT) || (intValue > MAX_INT)))
   {
-    printf("%s: value %lld out of range for an int32 option (%s)\n", corArgsProgName, intValue, kargP->longName);
+    corArgsSay("%s: value %lld out of range for an int32 option (%s)\n", corArgsProgName, intValue, kargP->longName);
     return CorArgsOutOfBounds;
   }
   else if ((kargP->type == CorArgUInt8) && ((intValue < 0) || (intValue > MAX_UCHAR)))
   {
-    printf("%s: value %lld out of range for a uint8 option (%s)\n", corArgsProgName, intValue, kargP->longName);
+    corArgsSay("%s: value %lld out of range for a uint8 option (%s)\n", corArgsProgName, intValue, kargP->longName);
     return CorArgsOutOfBounds;
   }
   else if ((kargP->type == CorArgUInt16) && ((intValue < 0) || (intValue > MAX_USHORT)))
   {
-    printf("%s: value %lld out of range for a uint16 option (%s)\n", corArgsProgName, intValue, kargP->longName);
+    corArgsSay("%s: value %lld out of range for a uint16 option (%s)\n", corArgsProgName, intValue, kargP->longName);
     return CorArgsOutOfBounds;
   }
   else if ((kargP->type == CorArgUInt32) && ((intValue < 0) || (intValue > MAX_UINT)))
   {
-    printf("%s: value %lld out of range for a uint32 option (%s)\n", corArgsProgName, intValue, kargP->longName);
+    corArgsSay("%s: value %lld out of range for a uint32 option (%s)\n", corArgsProgName, intValue, kargP->longName);
     return CorArgsOutOfBounds;
   }
 
@@ -207,18 +232,18 @@ CorArgsStatus limitCheck(CorArgInfo* kargP, long long intValue, unsigned long lo
       {
         if (kargP->max != CORARGS_NL)
         {
-          printf("%s: value %lld for option '%s' is inferior to its lower limit. Allowed range: %lld-%lld\n",
-                 corArgsProgName,
-                 intValue,
-                 kargP->longName,
-                 (long long) kargP->min, (long long) kargP->max);
+          corArgsSay("%s: value %lld for option '%s' is inferior to its lower limit. Allowed range: %lld-%lld\n",
+                     corArgsProgName,
+                     intValue,
+                     kargP->longName,
+                     (long long) kargP->min, (long long) kargP->max);
         }
         else
-          printf("%s: value %lld for option '%s' is inferior to %lld, its lower limit\n",
-                 corArgsProgName,
-                 intValue,
-                 kargP->longName,
-                 (long long) kargP->min);
+          corArgsSay("%s: value %lld for option '%s' is inferior to %lld, its lower limit\n",
+                     corArgsProgName,
+                     intValue,
+                     kargP->longName,
+                     (long long) kargP->min);
                  
         if      (kargP->type == CorArgInt8)   return CorArgsCharOutOfMinLimit;
         else if (kargP->type == CorArgInt16)  return CorArgsShortOutOfMinLimit;
@@ -231,17 +256,17 @@ CorArgsStatus limitCheck(CorArgInfo* kargP, long long intValue, unsigned long lo
       if (uintValue < (unsigned long long) kargP->min)
       {
         if (kargP->max != CORARGS_NL)
-          printf("%s: value %lld for option '%s' is inferior to its lower limit. Allowed range: %lld-%lld\n",
-                 corArgsProgName,
-                 intValue,
-                 kargP->longName,
-                 (long long) kargP->min, (long long) kargP->max);
+          corArgsSay("%s: value %lld for option '%s' is inferior to its lower limit. Allowed range: %lld-%lld\n",
+                     corArgsProgName,
+                     intValue,
+                     kargP->longName,
+                     (long long) kargP->min, (long long) kargP->max);
         else
-          printf("%s: value %lld for option '%s' is inferior to %lld, its lower limit\n",
-                 corArgsProgName,
-                 intValue,
-                 kargP->longName,
-                 (long long) kargP->min);
+          corArgsSay("%s: value %lld for option '%s' is inferior to %lld, its lower limit\n",
+                     corArgsProgName,
+                     intValue,
+                     kargP->longName,
+                     (long long) kargP->min);
 
         if      (kargP->type == CorArgUInt8)   return CorArgsUCharOutOfMinLimit;
         else if (kargP->type == CorArgUInt16)  return CorArgsUShortOutOfMinLimit;
@@ -254,17 +279,17 @@ CorArgsStatus limitCheck(CorArgInfo* kargP, long long intValue, unsigned long lo
       if (floatValue < (float) (long long) kargP->min)
       {
         if (kargP->max != CORARGS_NL)
-          printf("%s: value %f for option '%s' is inferior to its lower limit. Allowed range: %f-%f\n",
-                 corArgsProgName,
-                 floatValue,
-                 kargP->longName,
-                 (float) (long long) kargP->min, (float) (long long) kargP->max);
+          corArgsSay("%s: value %f for option '%s' is inferior to its lower limit. Allowed range: %f-%f\n",
+                     corArgsProgName,
+                     floatValue,
+                     kargP->longName,
+                     (float) (long long) kargP->min, (float) (long long) kargP->max);
         else
-          printf("%s: value %f for option '%s' is inferior to %f, its lower limit\n",
-                 corArgsProgName,
-                 floatValue,
-                 kargP->longName,
-                 (float) (long long) kargP->min);
+          corArgsSay("%s: value %f for option '%s' is inferior to %f, its lower limit\n",
+                     corArgsProgName,
+                     floatValue,
+                     kargP->longName,
+                     (float) (long long) kargP->min);
           
         return CorArgsFloatOutOfMinLimit;
       }
@@ -274,17 +299,17 @@ CorArgsStatus limitCheck(CorArgInfo* kargP, long long intValue, unsigned long lo
       if (strcmp(stringValue, (char*) kargP->min) < 0)
       {
         if (kargP->max != CORARGS_NL)
-          printf("%s: value '%s' for option '%s' is inferior to its lower limit. Allowed range: '%s' - '%s'\n",
-                 corArgsProgName,
-                 stringValue,
-                 kargP->longName,
-                 (char*) kargP->min, (char*) kargP->max);
+          corArgsSay("%s: value '%s' for option '%s' is inferior to its lower limit. Allowed range: '%s' - '%s'\n",
+                     corArgsProgName,
+                     stringValue,
+                     kargP->longName,
+                     (char*) kargP->min, (char*) kargP->max);
         else
-          printf("%s: value '%s' for option '%s' is inferior to '%s', its lower limit\n",
-                 corArgsProgName,
-                 stringValue,
-                 kargP->longName,
-                 (char*) kargP->min);
+          corArgsSay("%s: value '%s' for option '%s' is inferior to '%s', its lower limit\n",
+                     corArgsProgName,
+                     stringValue,
+                     kargP->longName,
+                     (char*) kargP->min);
           
         return CorArgsStringOutOfMinLimit;
       }
@@ -298,17 +323,17 @@ CorArgsStatus limitCheck(CorArgInfo* kargP, long long intValue, unsigned long lo
       if (intValue > (long long) kargP->max)
       {
         if (kargP->min != CORARGS_NL)
-          printf("%s: value %lld for option '%s' exceeds its upper limit. Allowed range: %lld-%lld\n",
-                 corArgsProgName,
-                 intValue,
-                 kargP->longName,
-                 (long long) kargP->min, (long long) kargP->max);
+          corArgsSay("%s: value %lld for option '%s' exceeds its upper limit. Allowed range: %lld-%lld\n",
+                     corArgsProgName,
+                     intValue,
+                     kargP->longName,
+                     (long long) kargP->min, (long long) kargP->max);
         else
-          printf("%s: value %lld for option '%s' exceeds %lld, its upper limit\n",
-                 corArgsProgName,
-                 intValue,
-                 kargP->longName,
-                 (long long) kargP->max);
+          corArgsSay("%s: value %lld for option '%s' exceeds %lld, its upper limit\n",
+                     corArgsProgName,
+                     intValue,
+                     kargP->longName,
+                     (long long) kargP->max);
 
         if      (kargP->type == CorArgInt8)   return CorArgsCharOutOfMaxLimit;
         else if (kargP->type == CorArgInt16)  return CorArgsShortOutOfMaxLimit;
@@ -321,17 +346,17 @@ CorArgsStatus limitCheck(CorArgInfo* kargP, long long intValue, unsigned long lo
       if (uintValue > (unsigned long long) kargP->max)
       {
         if (kargP->min != CORARGS_NL)
-          printf("%s: value %lld for option '%s' exceeds its upper limit. Allowed range: %llu-%llu\n",
-                 corArgsProgName,
-                 intValue,
-                 kargP->longName,
-                 (unsigned long long) kargP->min, (unsigned long long) kargP->max);
+          corArgsSay("%s: value %lld for option '%s' exceeds its upper limit. Allowed range: %llu-%llu\n",
+                     corArgsProgName,
+                     intValue,
+                     kargP->longName,
+                     (unsigned long long) kargP->min, (unsigned long long) kargP->max);
         else
-          printf("%s: value %lld for option '%s' exceeds %llu, its upper limit\n",
-                 corArgsProgName,
-                 intValue,
-                 kargP->longName,
-                 (unsigned long long) kargP->max);
+          corArgsSay("%s: value %lld for option '%s' exceeds %llu, its upper limit\n",
+                     corArgsProgName,
+                     intValue,
+                     kargP->longName,
+                     (unsigned long long) kargP->max);
 
         if      (kargP->type == CorArgUInt8)   return CorArgsUCharOutOfMaxLimit;
         else if (kargP->type == CorArgUInt16)  return CorArgsUShortOutOfMaxLimit;
@@ -344,17 +369,17 @@ CorArgsStatus limitCheck(CorArgInfo* kargP, long long intValue, unsigned long lo
       if (floatValue > (float) (long long) kargP->max)
       {
         if (kargP->min != CORARGS_NL)
-          printf("%s: value %f for option '%s' exceeds its upper limit. Allowed range: %f-%f\n",
-                 corArgsProgName,
-                 floatValue,
-                 kargP->longName,
-                 (float) (long long) kargP->min, (float) (long long) kargP->max);
+          corArgsSay("%s: value %f for option '%s' exceeds its upper limit. Allowed range: %f-%f\n",
+                     corArgsProgName,
+                     floatValue,
+                     kargP->longName,
+                     (float) (long long) kargP->min, (float) (long long) kargP->max);
         else
-          printf("%s: value %f for option '%s' exceeds %f, its upper limit\n",
-                 corArgsProgName,
-                 floatValue,
-                 kargP->longName,
-                 (float) (long long) kargP->max);
+          corArgsSay("%s: value %f for option '%s' exceeds %f, its upper limit\n",
+                     corArgsProgName,
+                     floatValue,
+                     kargP->longName,
+                     (float) (long long) kargP->max);
           
         return CorArgsFloatOutOfMaxLimit;
       }
@@ -364,17 +389,17 @@ CorArgsStatus limitCheck(CorArgInfo* kargP, long long intValue, unsigned long lo
       if (strcmp(stringValue, (char*) kargP->max) < 0)
       {
         if (kargP->min != CORARGS_NL)
-          printf("%s: value '%s' for option '%s' exceeds its upper limit. Allowed range: '%s' - '%s'\n",
-                 corArgsProgName,
-                 stringValue,
-                 kargP->longName,
-                 (char*) kargP->min, (char*) kargP->max);
+          corArgsSay("%s: value '%s' for option '%s' exceeds its upper limit. Allowed range: '%s' - '%s'\n",
+                     corArgsProgName,
+                     stringValue,
+                     kargP->longName,
+                     (char*) kargP->min, (char*) kargP->max);
         else
-          printf("%s: value '%s' for option '%s' exceeds '%s', its upper limit\n",
-                 corArgsProgName,
-                 stringValue,
-                 kargP->longName,
-                 (char*) kargP->min);
+          corArgsSay("%s: value '%s' for option '%s' exceeds '%s', its upper limit\n",
+                     corArgsProgName,
+                     stringValue,
+                     kargP->longName,
+                     (char*) kargP->min);
           
         return CorArgsStringOutOfMaxLimit;
       }
@@ -396,7 +421,7 @@ static CorArgsStatus optionSet(CorArgInfo* kargP, int argC, char* argV[], int ar
 
   if ((kargP->type != CorArgBool) && (argIx + 1 >= argC))
   {
-    printf("%s: value missing for option '%s'\n", corArgsProgName, kargP->longName);
+    corArgsSay("%s: value missing for option '%s'\n", corArgsProgName, kargP->longName);
     return CorArgsValueMissing;
   }
 
@@ -434,13 +459,13 @@ CorArgsStatus corArgsValueSet(CorArgInfo* kargP, const char* valueText)
 
     if ((endP == valueText) || (*endP != 0))
     {
-      printf("%s: invalid value '%s' for float option '%s'\n", corArgsProgName, valueText, kargP->longName);
+      corArgsSay("%s: invalid value '%s' for float option '%s'\n", corArgsProgName, valueText, kargP->longName);
       return CorArgsInvalidValue;
     }
 
     if (errno == ERANGE)
     {
-      printf("%s: invalid value for float option '%s'\n", corArgsProgName, kargP->longName);
+      corArgsSay("%s: invalid value for float option '%s'\n", corArgsProgName, kargP->longName);
       return CorArgsInvalidValue;
     }
   }
@@ -492,14 +517,14 @@ CorArgsStatus corArgsValueSet(CorArgInfo* kargP, const char* valueText)
 
     if (errno == ERANGE)
     {
-      printf("%s: invalid value (%s) for integer option '%s'\n", corArgsProgName, valueP, kargP->longName);
+      corArgsSay("%s: invalid value (%s) for integer option '%s'\n", corArgsProgName, valueP, kargP->longName);
       return CorArgsOutOfBounds;
     }
 
     // Nothing but the number: "abc" or "12x" was 0 or 12, silently
     if ((rest == valueP) || (*rest != 0))
     {
-      printf("%s: invalid value '%s' for integer option '%s'\n", corArgsProgName, valueText, kargP->longName);
+      corArgsSay("%s: invalid value '%s' for integer option '%s'\n", corArgsProgName, valueText, kargP->longName);
       return CorArgsInvalidValue;
     }
 
@@ -686,6 +711,15 @@ CorArgsStatus corArgsParse(int argC, char* argV[])
       corArgsExtUsage();
       exit(corArgsExitOnUsageExitCode);
     }
+  }
+
+  //
+  // A value of the environment refused (corArgsEnvApply): said now, after the usage
+  //
+  if (corArgsEnvStatus != CorArgsOk)
+  {
+    fputs(corArgsEnvError, stdout);
+    return corArgsEnvStatus;
   }
 
   //

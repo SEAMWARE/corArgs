@@ -32,4 +32,12 @@ extern CorArgsStatus corArgsParse(int argC, char* argV[]);
 //
 extern CorArgsStatus corArgsValueSet(CorArgInfo* kargP, const char* valueText);
 
+
+
+// -----------------------------------------------------------------------------
+//
+// corArgsSay - a value's error, to stdout - or into corArgsEnvError while the environment is read
+//
+extern void corArgsSay(const char* format, ...) __attribute__((format(printf, 1, 2)));
+
 #endif  // CORARGS_CORARGSPARSE_H_
