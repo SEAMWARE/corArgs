@@ -81,6 +81,8 @@ CorArgsStatus corArgsInit(const char* progName, CorArg* kargV, const char* prefi
 
 Initializes the parser with option definitions, and sets the options found in the environment. `prefix` is used for environment variables: "MYAPP" and "MYAPP_" both make `--port` settable via `MYAPP_PORT` (`--no-browser`: `MYAPP_NO_BROWSER`). The name is the option's long name (its short name if it has none), upper-cased, with every character other than a letter, a digit or `_` turned into `_`. The action options - `--usage`, `--Usage` and a program's own `--version` - have none: not listed by `--Usage`, not read. The command line wins over the environment.
 
+A Bool option's variable is on for `true`, `True`, `TRUE`, `on`, `On` or `ON`, off for `false`, `False`, `FALSE`, `off`, `Off` or `OFF`. Any other value (`yes`, `1`, `tRuE`, an empty one) is refused: `<prog>: <VAR>=<value>: not a Bool - ...`. A value the environment holds that is refused - that one, or a number out of range - is not said by `corArgsInit` (nor by `corArgsAdd`): it is kept, and `corArgsParse` says it and returns its status, after the `-u`/`-U` check - so `MYAPP_PORT=0 myapp -u` prints the usage.
+
 #### corArgsParse
 
 ```c
@@ -89,7 +91,8 @@ CorArgsStatus corArgsParse(int argC, char* argV[]);
 
 Parses command-line arguments and populates variables.
 
-- `--usage`/`-u` or `--Usage`/`-U` anywhere on the command line prints that list and exits (`corArgsConfig` sets the exit code, or not to exit) - before any other option is set, so a bad value of another option (`-u -p 0`) does not stop it.
+- `--usage`/`-u` or `--Usage`/`-U` anywhere on the command line prints that list and exits (`corArgsConfig` sets the exit code, or not to exit) - before any other option is set, so a bad value of another option (`-u -p 0`), on the command line or in the environment, does not stop it.
+- A value of the environment refused (see `corArgsInit`): said, and its status returned.
 - A required option (`CorArgReq`) set neither on the command line nor in the environment: `<prog>: missing required option: <name>`, the usage, exit 1. An action option is never required.
 
 #### corArgsUsage / corArgsExtUsage
@@ -142,7 +145,7 @@ make          # Build library
 make clean    # Remove build artifacts
 make install  # Build (nothing to copy: consumers use -I.. and link from this checkout)
 make envTest  # options set through the environment
-make parseTest  # a required option, -u/-U beside a bad value, the action options' environment variables
+make parseTest  # a required option, -u/-U beside a bad value, the action options' environment variables, a group of switches, a Bool's environment values
 ```
 
 ## Usage Example

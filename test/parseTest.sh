@@ -12,6 +12,8 @@
 #   - --usage/-u and --Usage/-U print the list whatever else is wrong on the command line (`-u -p 0`)
 #   - the action options (--usage, --Usage, --version) have no environment variable: not listed, not read
 #   - a group of one-letter switches (-Vu) holds Bool options only, each a one-letter short name: -d is not -dir
+#   - a Bool environment variable: on for true, True, TRUE, on, On, ON; off for false, False, FALSE, off, Off, OFF;
+#     any other value refused - and a refused value of the environment is said AFTER the -u/-U check
 #
 #   parseTest.sh <path to parseTest>
 #
@@ -46,7 +48,7 @@ check() {
   fi
 }
 
-unset PARSETEST_NAME PARSETEST_PORT PARSETEST_VERSION PARSETEST_USAGE PARSETEST_DIR
+unset PARSETEST_NAME PARSETEST_PORT PARSETEST_VERSION PARSETEST_USAGE PARSETEST_DIR PARSETEST_QUIET
 
 check "required option missing: named"                 1 '^parseTest: missing required option: --name$'  "$P"
 check "required option missing: the usage follows"     1 '^Usage: parseTest'                              "$P"
@@ -71,6 +73,28 @@ check "-d is not the String -dir: unrecognized"       1 '^parseTest: unrecognize
 check "-d: nothing set, no OK line"                   1 '!^(OK|dir) '                                     "$P" -d --name x
 check "a group of switches holds no String (-Vn)"     1 '^parseTest: unrecognized option: -Vn$'          "$P" -Vn --name x
 check "-dir with its value"                           0 '^dir /tmp$'                                     "$P" -dir /tmp --name x
+check "PARSETEST_QUIET=true   on"                      0 '^quiet$'                                         env PARSETEST_QUIET=true "$P" --name x
+check "PARSETEST_QUIET=True   on"                      0 '^quiet$'                                         env PARSETEST_QUIET=True "$P" --name x
+check "PARSETEST_QUIET=TRUE   on"                      0 '^quiet$'                                         env PARSETEST_QUIET=TRUE "$P" --name x
+check "PARSETEST_QUIET=on     on"                        0 '^quiet$'                                         env PARSETEST_QUIET=on "$P" --name x
+check "PARSETEST_QUIET=On     on"                        0 '^quiet$'                                         env PARSETEST_QUIET=On "$P" --name x
+check "PARSETEST_QUIET=ON     on"                        0 '^quiet$'                                         env PARSETEST_QUIET=ON "$P" --name x
+check "PARSETEST_QUIET=false  off"                    0 '!^quiet$'                                        env PARSETEST_QUIET=false "$P" --name x
+check "PARSETEST_QUIET=False  off"                    0 '!^quiet$'                                        env PARSETEST_QUIET=False "$P" --name x
+check "PARSETEST_QUIET=FALSE  off"                    0 '!^quiet$'                                        env PARSETEST_QUIET=FALSE "$P" --name x
+check "PARSETEST_QUIET=off    off"                      0 '!^quiet$'                                        env PARSETEST_QUIET=off "$P" --name x
+check "PARSETEST_QUIET=Off    off"                      0 '!^quiet$'                                        env PARSETEST_QUIET=Off "$P" --name x
+check "PARSETEST_QUIET=OFF    off"                      0 '!^quiet$'                                        env PARSETEST_QUIET=OFF "$P" --name x
+check "PARSETEST_QUIET='yes' refused"                 3 '^parseTest: PARSETEST_QUIET=yes: not a Bool'  env PARSETEST_QUIET=yes "$P" --name x
+check "PARSETEST_QUIET='1' refused"                   3 '^parseTest: PARSETEST_QUIET=1: not a Bool'    env PARSETEST_QUIET=1 "$P" --name x
+check "PARSETEST_QUIET='tRuE' refused"                3 '^parseTest: PARSETEST_QUIET=tRuE: not a Bool' env PARSETEST_QUIET=tRuE "$P" --name x
+check "PARSETEST_QUIET='' refused"                    3 '^parseTest: PARSETEST_QUIET=: not a Bool'     env PARSETEST_QUIET='' "$P" --name x
+check "PARSETEST_QUIET=yes with -u: the usage"        0 '^Usage: parseTest'                              env PARSETEST_QUIET=yes "$P" -u
+check "PARSETEST_QUIET=yes with -u: no error"         0 '!not a Bool'                                    env PARSETEST_QUIET=yes "$P" -u
+check "PARSETEST_PORT=0: refused, the variable named" 3 'from the environment variable PARSETEST_PORT'  env PARSETEST_PORT=0 "$P" --name x
+check "PARSETEST_PORT=0 with -u: the usage"           0 '^Usage: parseTest'                              env PARSETEST_PORT=0 "$P" -u
+check "PARSETEST_PORT=0 with -U: the list"            0 '--name'                                         env PARSETEST_PORT=0 "$P" -U
+check "PARSETEST_PORT=0 with -u: no range error"      0 '!lower limit|environment variable'              env PARSETEST_PORT=0 "$P" -u
 
 if [ $failures != 0 ]; then
   echo "parseTest: $failures FAILED"

@@ -17,3 +17,13 @@
 // corArgsProgName -
 //
 char* corArgsProgName = "prog-name";
+
+
+
+// -----------------------------------------------------------------------------
+//
+// corArgsEnvError, corArgsEnvStatus, corArgsEnvReading - see corArgsGlobals.h
+//
+char          corArgsEnvError[1024];
+CorArgsStatus corArgsEnvStatus  = CorArgsOk;
+bool          corArgsEnvReading = false;
