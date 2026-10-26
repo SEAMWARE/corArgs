@@ -23,7 +23,6 @@
 bool corArgsBuiltinUsage;
 bool corArgsBuiltinExtUsage;
 bool corArgsBuiltinVerbose;
-bool corArgsBuiltinDebug;
 
 
 
@@ -36,7 +35,6 @@ CorArg corArgsBuiltins[] =
   { "--usage",   "-u", CorArgBool, &corArgsBuiltinUsage,    CorArgOpt, _vp false, _vp false, _vp true, "usage",        },
   { "--Usage",   "-U", CorArgBool, &corArgsBuiltinExtUsage, CorArgOpt, _vp false, _vp false, _vp true, "extended usage" },
   { "--verbose", "-v", CorArgBool, &corArgsBuiltinVerbose,  CorArgOpt, _vp false, _vp false, _vp true, "verbose mode"      },
-  { "--debug",   "-d", CorArgBool, &corArgsBuiltinDebug,    CorArgOpt, _vp false, _vp false, _vp true, "debug mode" },
 
   CORARGS_END
 };

@@ -25,7 +25,6 @@
 extern bool   corArgsBuiltinUsage;
 extern bool   corArgsBuiltinExtUsage;
 extern bool   corArgsBuiltinVerbose;
-extern bool   corArgsBuiltinDebug;
 
 
 
