@@ -11,6 +11,7 @@
 #   - a required option missing: named, the usage, exit 1; given on the command line or in the environment: fine
 #   - --usage/-u and --Usage/-U print the list whatever else is wrong on the command line (`-u -p 0`)
 #   - the action options (--usage, --Usage, --version) have no environment variable: not listed, not read
+#   - a group of one-letter switches (-Vu) holds Bool options only, each a one-letter short name: -d is not -dir
 #
 #   parseTest.sh <path to parseTest>
 #
@@ -45,7 +46,7 @@ check() {
   fi
 }
 
-unset PARSETEST_NAME PARSETEST_PORT PARSETEST_VERSION PARSETEST_USAGE
+unset PARSETEST_NAME PARSETEST_PORT PARSETEST_VERSION PARSETEST_USAGE PARSETEST_DIR
 
 check "required option missing: named"                 1 '^parseTest: missing required option: --name$'  "$P"
 check "required option missing: the usage follows"     1 '^Usage: parseTest'                              "$P"
@@ -66,6 +67,10 @@ check "-U lists no variable for --version"             0 '!PARSETEST_VERSION'   
 check "-U lists no variable for --usage, --Usage"      0 '!PARSETEST_USAGE'                               "$P" -U
 check "PARSETEST_VERSION is not read"                  0 '^OK name x port 7900 version false$'            env PARSETEST_VERSION=true "$P" --name x
 check "PARSETEST_USAGE is not read"                    0 '^OK name x port 7900 version false$'            env PARSETEST_USAGE=true "$P" --name x
+check "-d is not the String -dir: unrecognized"       1 '^parseTest: unrecognized option: -d$'           "$P" -d --name x
+check "-d: nothing set, no OK line"                   1 '!^(OK|dir) '                                     "$P" -d --name x
+check "a group of switches holds no String (-Vn)"     1 '^parseTest: unrecognized option: -Vn$'          "$P" -Vn --name x
+check "-dir with its value"                           0 '^dir /tmp$'                                     "$P" -dir /tmp --name x
 
 if [ $failures != 0 ]; then
   echo "parseTest: $failures FAILED"

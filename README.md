@@ -33,7 +33,7 @@ were already stale in kargs (they fail the same way against kargs's own binary).
 - **Type-safe parsing** - Bool, integers (8/16/32/64 bit), float, string
 - **Constraints** - Min/max values for numbers, length limits for strings
 - **Automatic help** - Generated from option descriptions
-- **Built-in options** - `--usage`, `--verbose`, `--debug` included
+- **Built-in options** - `--usage`, `--Usage`, `--verbose` included
 - **Environment variables** - Options can be set via environment
 - **Error collection** - Detailed error reporting with source tracking
 
@@ -132,9 +132,8 @@ password, a URI that may hold credentials: `CorArgInfo.secret`. A tool listing t
 | `--usage` | `-u` | Display standard usage |
 | `--Usage` | `-U` | Display extended usage: one row per option - long and short name, environment variable, sort, type and default value (`-` for none; a secret option's is not shown) |
 | `--verbose` | `-v` | Enable verbose mode |
-| `--debug` | `-d` | Enable debug mode |
 
-Access via: `corArgsBuiltinUsage`, `corArgsBuiltinVerbose`, `corArgsBuiltinDebug`
+Access via: `corArgsBuiltinUsage`, `corArgsBuiltinExtUsage`, `corArgsBuiltinVerbose`. There is no `--debug`: what a debug switch would show, the trace levels (`corLog`) do.
 
 ## Building
 
