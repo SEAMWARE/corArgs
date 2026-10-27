@@ -75,7 +75,15 @@ parseTest: $(OBJDIR)/$(LIB)
 	$(CC) $(CFLAGS) -o $(OBJDIR)/parseTest test/parseTest.c $(OBJDIR)/$(LIB) $(TEST_LIBS) -lpthread
 	test/parseTest.sh $(OBJDIR)/parseTest
 
-.PHONY: envTest parseTest
+#
+# limitsTest - a string's and a float's limits, and corArgsInit's check of the table: a default outside
+# a one-sided limit, a name used twice, a section heading (test/limitsTest.c, run by test/limitsTest.sh)
+#
+limitsTest: $(OBJDIR)/$(LIB)
+	$(CC) $(CFLAGS) -o $(OBJDIR)/limitsTest test/limitsTest.c $(OBJDIR)/$(LIB) $(TEST_LIBS) -lpthread
+	test/limitsTest.sh $(OBJDIR)/limitsTest
+
+.PHONY: envTest parseTest limitsTest
 
 #
 # The archive and the shared library are built PER FLAVOUR, in $(OBJDIR), and then STAGED to the repo

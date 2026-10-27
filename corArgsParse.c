@@ -222,6 +222,9 @@ static CorArgsStatus minMaxValueCheck(CorArgInfo* kargP, long long intValue, uns
 //
 // limitCheck - check the limits the user has set for the option
 //
+// CORARGS_NL: no limit. An integer's and a float's limits are whole numbers (the void* holds a long long);
+// a string's are strings, compared with strcmp - and NULL is no limit for a string, as CORARGS_NL is.
+//
 CorArgsStatus limitCheck(CorArgInfo* kargP, long long intValue, unsigned long long uintValue, float floatValue, char* stringValue)
 {
   if (kargP->min != CORARGS_NL)
@@ -256,17 +259,17 @@ CorArgsStatus limitCheck(CorArgInfo* kargP, long long intValue, unsigned long lo
       if (uintValue < (unsigned long long) kargP->min)
       {
         if (kargP->max != CORARGS_NL)
-          corArgsSay("%s: value %lld for option '%s' is inferior to its lower limit. Allowed range: %lld-%lld\n",
+          corArgsSay("%s: value %llu for option '%s' is inferior to its lower limit. Allowed range: %llu-%llu\n",
                      corArgsProgName,
-                     intValue,
+                     uintValue,
                      kargP->longName,
-                     (long long) kargP->min, (long long) kargP->max);
+                     (unsigned long long) kargP->min, (unsigned long long) kargP->max);
         else
-          corArgsSay("%s: value %lld for option '%s' is inferior to %lld, its lower limit\n",
+          corArgsSay("%s: value %llu for option '%s' is inferior to %llu, its lower limit\n",
                      corArgsProgName,
-                     intValue,
+                     uintValue,
                      kargP->longName,
-                     (long long) kargP->min);
+                     (unsigned long long) kargP->min);
 
         if      (kargP->type == CorArgUInt8)   return CorArgsUCharOutOfMinLimit;
         else if (kargP->type == CorArgUInt16)  return CorArgsUShortOutOfMinLimit;
@@ -294,7 +297,7 @@ CorArgsStatus limitCheck(CorArgInfo* kargP, long long intValue, unsigned long lo
         return CorArgsFloatOutOfMinLimit;
       }
     }
-    else if (kargP->type == CorArgString)
+    else if ((kargP->type == CorArgString) && (kargP->min != NULL))  // a string's NULL limit: none
     {
       if (strcmp(stringValue, (char*) kargP->min) < 0)
       {
@@ -346,15 +349,15 @@ CorArgsStatus limitCheck(CorArgInfo* kargP, long long intValue, unsigned long lo
       if (uintValue > (unsigned long long) kargP->max)
       {
         if (kargP->min != CORARGS_NL)
-          corArgsSay("%s: value %lld for option '%s' exceeds its upper limit. Allowed range: %llu-%llu\n",
+          corArgsSay("%s: value %llu for option '%s' exceeds its upper limit. Allowed range: %llu-%llu\n",
                      corArgsProgName,
-                     intValue,
+                     uintValue,
                      kargP->longName,
                      (unsigned long long) kargP->min, (unsigned long long) kargP->max);
         else
-          corArgsSay("%s: value %lld for option '%s' exceeds %llu, its upper limit\n",
+          corArgsSay("%s: value %llu for option '%s' exceeds %llu, its upper limit\n",
                      corArgsProgName,
-                     intValue,
+                     uintValue,
                      kargP->longName,
                      (unsigned long long) kargP->max);
 
@@ -384,9 +387,9 @@ CorArgsStatus limitCheck(CorArgInfo* kargP, long long intValue, unsigned long lo
         return CorArgsFloatOutOfMaxLimit;
       }
     }
-    else if (kargP->type == CorArgString)
+    else if ((kargP->type == CorArgString) && (kargP->max != NULL))
     {
-      if (strcmp(stringValue, (char*) kargP->max) < 0)
+      if (strcmp(stringValue, (char*) kargP->max) > 0)
       {
         if (kargP->min != CORARGS_NL)
           corArgsSay("%s: value '%s' for option '%s' exceeds its upper limit. Allowed range: '%s' - '%s'\n",
@@ -399,7 +402,7 @@ CorArgsStatus limitCheck(CorArgInfo* kargP, long long intValue, unsigned long lo
                      corArgsProgName,
                      stringValue,
                      kargP->longName,
-                     (char*) kargP->min);
+                     (char*) kargP->max);
           
         return CorArgsStringOutOfMaxLimit;
       }
@@ -471,6 +474,12 @@ CorArgsStatus corArgsValueSet(CorArgInfo* kargP, const char* valueText)
   }
   else if (kargP->type == CorArgString)
     stringValue = (char*) valueText;
+
+  if ((kargP->type == CorArgFloat) || (kargP->type == CorArgString))
+  {
+    if ((ks = limitCheck(kargP, intValue, uintValue, floatValue, stringValue)) != CorArgsOk)
+      return ks;
+  }
   else
   {
     int base = 10;
