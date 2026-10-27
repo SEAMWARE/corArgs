@@ -31,7 +31,7 @@ were already stale in kargs (they fail the same way against kargs's own binary).
 ## Features
 
 - **Type-safe parsing** - Bool, integers (8/16/32/64 bit), float, string
-- **Constraints** - Min/max values for numbers, length limits for strings
+- **Constraints** - min/max values for numbers (whole numbers, a float's too), lexical (`strcmp`) limits for strings
 - **Automatic help** - Generated from option descriptions
 - **Built-in options** - `--usage`, `--Usage`, `--verbose` included
 - **Environment variables** - Options can be set via environment
@@ -67,7 +67,7 @@ CorArgInt   // int (CorArgInt32)
 CorArgUInt  // unsigned int (CorArgUInt32)
 CorArgLong  // long long (CorArgInt64)
 CorArgULong // unsigned long long (CorArgUInt64)
-CorArgFloat // double
+CorArgFloat // float
 CorArgString    // char*
 ```
 
@@ -145,6 +145,7 @@ make          # Build library
 make clean    # Remove build artifacts
 make install  # Build (nothing to copy: consumers use -I.. and link from this checkout)
 make envTest  # options set through the environment
+make limitsTest  # a string's and a float's limits; corArgsInit refusing a table (a default outside a limit, a name twice); a section heading
 make parseTest  # a required option, -u/-U beside a bad value, the action options' environment variables, a group of switches, a Bool's environment values
 ```
 
@@ -156,19 +157,17 @@ make parseTest  # a required option, -u/-U beside a bad value, the action option
 // Variables to hold parsed values
 int    port     = 0;
 char*  host     = NULL;
-bool  verbose  = false;
 int    timeout  = 30;
 
-// Option definitions
+// Option definitions - --verbose/-v is a builtin (corArgsBuiltinVerbose): declaring it again is CorArgsNameTaken
 CorArg options[] = {
     { "--port",    "-p", CorArgInt,    &port,    CorArgReq, _vp 8080, _vp 1, _vp 65535,
       "Server port (1-65535)" },
     { "--host",    "-h", CorArgString, &host,    CorArgOpt, "localhost", NULL, NULL,
       "Server hostname" },
+    CORARGS_SEPARATOR("Tuning"),
     { "--timeout", "-t", CorArgInt,    &timeout, CorArgOpt, _vp 30, _vp 1, _vp 300,
       "Connection timeout in seconds" },
-    { "--verbose", "-v", CorArgBool,   &verbose, CorArgOpt, _vp false, NULL, NULL,
-      "Enable verbose output" },
     CORARGS_END
 };
 
@@ -193,7 +192,7 @@ int main(int argc, char* argv[])
 
     // Use parsed values
     printf("Starting server on %s:%d (timeout: %ds)\n", host, port, timeout);
-    if (verbose)
+    if (corArgsBuiltinVerbose)
         printf("Verbose mode enabled\n");
 
     return 0;
@@ -218,14 +217,31 @@ MYSERVER_PORT=9000 ./myserver
 
 ### Generated Usage Output
 
+`./myserver -u` - an optional option in brackets, a `CORARGS_SEPARATOR` as its title:
+
 ```
-Usage: myserver [options]
-  --port, -p <int>       Server port (1-65535) [REQUIRED]
-  --host, -h <string>    Server hostname [default: localhost]
-  --timeout, -t <int>    Connection timeout in seconds [default: 30]
-  --verbose, -v          Enable verbose output
-  --usage, -u            Display this help
+Usage: myserver  [--usage/-u (usage)]
+                 [--Usage/-U (extended usage)]
+                 [--verbose/-v (verbose mode)]
+                 --port/-p <Server port (1-65535)>
+                 [--host/-h <Server hostname>]
+
+                 Tuning
+                 [--timeout/-t <Connection timeout in seconds>]
 ```
+
+`./myserver -U` - one row per option: names, environment variable, sort, type, default:
+
+```
+  --usage   (-u)                  Optional   Bool     false
+  --Usage   (-U)                  Optional   Bool     false
+  --verbose (-v) MYSERVER_VERBOSE Optional   Bool     false
+  --port    (-p) MYSERVER_PORT    Required   Int      8080
+  --host    (-h) MYSERVER_HOST    Optional   String   localhost
+  --timeout (-t) MYSERVER_TIMEOUT Optional   Int      30
+```
+
+The usage, and every error about a value (`<prog>: value ... for option ...`), go to **stdout**.
 
 ## Constraint Validation
 
@@ -236,9 +252,24 @@ Usage: myserver [options]
 // Unsigned with no upper limit
 { "--size", NULL, CorArgULong, &size, CorArgOpt, _vp 0, _vp 0, CORARGS_NL, "Size in bytes" },
 
-// Float with range
-{ "--rate", NULL, CorArgFloat, &rate, CorArgOpt, _vp 1.0, _vp 0.1, _vp 10.0, "Rate (0.1-10.0)" },
+// Float with range - a float's default and limits are whole numbers: the void* holds a long long
+{ "--rate", NULL, CorArgFloat, &rate, CorArgOpt, _vp 1, _vp 1, _vp 10, "Rate (1-10)" },
+
+// String with lexical limits (strcmp): '050' to '100'. NULL, like CORARGS_NL, is no limit for a string
+{ "--code", NULL, CorArgString, &code, CorArgOpt, "060", _vp "050", _vp "100", "Code ('050'-'100')" },
 ```
+
+A value outside its limits is refused - on the command line and in the environment alike - with the
+limit or the range named. `corArgsInit` refuses a table (`CorArgsBadParam`, `CorArgsNameTaken`, the
+option named in `corArgsErrorGet()`'s last item) with:
+
+- an option without a name, or a name used twice - by two options, or by an option and a builtin;
+- a limit or a default outside its type's range, a min above the max, a default outside its limits
+  (one limit alone too; an option without a default, `CORARGS_NL`, is not checked);
+- a NULL `valueP`, an invalid type or sort, a NULL description.
+
+`CORARGS_SEPARATOR("title")` - a section heading in the usage - has no name, variable or limits,
+and goes in the table given to `corArgsInit` or `corArgsAdd`.
 
 ## Error Handling
 

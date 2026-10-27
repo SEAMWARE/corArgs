@@ -206,6 +206,12 @@ static CorArgsStatus corArgVectorCheck(CorArg* kiV)
   COR_LIB_V("corArgVectorCheck: Any user option with neither longName nor shortName?");
   while (kiV[kiIx].type != CorArgEnd)
   {
+    if (kiV[kiIx].type == CorArgSeparator)  // a section heading (CORARGS_SEPARATOR) has no name
+    {
+      ++kiIx;
+      continue;
+    }
+
     if ((kiV[kiIx].longName == NULL) || (kiV[kiIx].longName[0] == 0))
     {
       if ((kiV[kiIx].shortName == NULL) || (kiV[kiIx].shortName[0] == 0))
@@ -292,7 +298,7 @@ static CorArgsStatus corArgVectorCheck(CorArg* kiV)
           COR_LIB_V("Checking against longName '%s'", kiV[ix2].longName);
           if (strcmp(kiV[ix1].longName, kiV[ix2].longName) == 0)
           {
-            CORARGS_ERROR_PUSH(kiV[kiIx].longName, CorArgsNameTaken, "Option long-name already in use (by other options long-name)");
+            CORARGS_ERROR_PUSH(kiV[ix1].longName, CorArgsNameTaken, "Option long-name already in use (by other options long-name)");
             return CorArgsNameTaken;
           }
         }
@@ -302,7 +308,7 @@ static CorArgsStatus corArgVectorCheck(CorArg* kiV)
           COR_LIB_V("Checking against shortName '%s'", kiV[ix2].shortName);
           if (strcmp(kiV[ix1].longName, kiV[ix2].shortName) == 0)
           {
-            CORARGS_ERROR_PUSH(kiV[kiIx].longName, CorArgsNameTaken, "Option long-name already in use (by other options short-name)");
+            CORARGS_ERROR_PUSH(kiV[ix1].longName, CorArgsNameTaken, "Option long-name already in use (by other options short-name)");
             return CorArgsNameTaken;
           }
         }
@@ -316,7 +322,7 @@ static CorArgsStatus corArgVectorCheck(CorArg* kiV)
           COR_LIB_V("Checking against longName '%s'", kiV[ix2].longName);
           if (strcmp(kiV[ix1].shortName, kiV[ix2].longName) == 0)
           {
-            CORARGS_ERROR_PUSH(kiV[kiIx].shortName, CorArgsNameTaken, "Option short-name already in use (by other options short-name)");
+            CORARGS_ERROR_PUSH(kiV[ix1].shortName, CorArgsNameTaken, "Option short-name already in use (by other options long-name)");
             return CorArgsNameTaken;
           }
         }
@@ -326,7 +332,7 @@ static CorArgsStatus corArgVectorCheck(CorArg* kiV)
           COR_LIB_V("Checking against shortName '%s'", kiV[ix2].shortName);
           if (strcmp(kiV[ix1].shortName, kiV[ix2].shortName) == 0)
           {
-            CORARGS_ERROR_PUSH(kiV[kiIx].shortName, CorArgsNameTaken, "Option short-name already in use (by other options short-name)");
+            CORARGS_ERROR_PUSH(kiV[ix1].shortName, CorArgsNameTaken, "Option short-name already in use (by other options short-name)");
             return CorArgsNameTaken;
           }
         }
@@ -398,6 +404,7 @@ static CorArgsStatus corArgVectorCheck(CorArg* kiV)
   // 5. Default value within its range?
   //
   COR_LIB_V("corArgVectorCheck: Default value within its range?");
+  ix = 0;
   while (kiV[ix].type != CorArgEnd)
   {
     char*               name   = (kiV[ix].longName == NULL)? (char*) kiV[ix].shortName : (char*) kiV[ix].longName;
@@ -407,7 +414,13 @@ static CorArgsStatus corArgVectorCheck(CorArg* kiV)
     unsigned long long  uMax   = (unsigned long long) kiV[ix].max;
     long long           sDef   = (long long) kiV[ix].def;
     unsigned long long  uDef   = (unsigned long long) kiV[ix].def;
-    
+
+    if (sDef == CORARGS_NL_NUMBER)  // no default - nothing to check
+    {
+      ++ix;
+      continue;
+    }
+
     switch (kiV[ix].type)
     {
     case CorArgBool:
@@ -429,7 +442,7 @@ static CorArgsStatus corArgVectorCheck(CorArg* kiV)
 
       if ((sMax != CORARGS_NL_NUMBER) && (sDef > sMax))
       {
-        CORARGS_ERROR_PUSH(name, CorArgsBadParam, "Defaultvalue exceeds the maximum limit for option");
+        CORARGS_ERROR_PUSH(name, CorArgsBadParam, "Default value exceeds the maximum limit for option");
         return CorArgsBadParam;
       }
       break;
@@ -565,7 +578,7 @@ static CorArgsStatus corArgVectorCheck(CorArg* kiV)
   {
     char* name   = (kiV[ix].longName == NULL)? (char*) kiV[ix].shortName : (char*) kiV[ix].longName;
 
-    if (kiV[ix].valueP == NULL)
+    if ((kiV[ix].valueP == NULL) && (kiV[ix].type != CorArgSeparator))
     {
       CORARGS_ERROR_PUSH(name, CorArgsBadParam, "NULL value pointer for option");
       return CorArgsBadParam;
